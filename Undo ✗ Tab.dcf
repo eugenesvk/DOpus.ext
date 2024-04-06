@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<button always_enable="yes" backcol="none" display="both" hotkey="ctrl+shift+U" label_pos="right" textcol="none" timed="yes" type="menu_button">
+	<label>Undo ✗ Tab\t⇧⎈u</label>
+	<tip>Show a list of closed tabs to reopen</tip>
+	<icon1>#undoclosetab</icon1>
+	<function type="normal">
+		<instruction>Undo✗TabVis</instruction>
+	</function>
+	<button backcol="none" display="both" hotkey="ctrl+alt+U" label_pos="right" textcol="none">
+		<label>Undo ✗ Tab</label>
+		<tip>Undo closed tabs 1 by 1</tip>
+		<icon1>#undoclosetab</icon1>
+		<function type="normal">
+			<instruction>Undo✗Tab BG </instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" hotkey="ctrl+U" label_pos="right" textcol="none">
+		<label>Undo ✗ Tab and switch</label>
+		<tip>Undo closed tabs 1 by 1 and activate</tip>
+		<icon1>#undoclosetab</icon1>
+		<function type="normal">
+			<instruction>Undo✗Tab FG </instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" label_pos="right" separate="yes" textcol="none">
+		<label>Undo Close Tab (test DOpus native)</label>
+		<tip>(builin) Re-open the previously closed tab</tip>
+		<icon1>#undoclosetab</icon1>
+		<function type="normal">
+			<instruction>Go TABUNDOCLOSE</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" hotkey="ctrl+8" label_pos="right" textcol="none">
+		<label>Clear ✗ Tab History</label>
+		<tip>Clear history of closed tabs for the currently active lister</tip>
+		<icon1>#delete2</icon1>
+		<function type="normal">
+			<instruction>Undo✗TabClearHistory </instruction>
+		</function>
+	</button>
+</button>
