@@ -1,4 +1,8 @@
 # templates github.com/github/gitignore
+# others' scripts
+Iconset Maker.osp
+Tab-Labelizer.js
+
 # test folder
 \[test\]
 # project's built/temp docs
