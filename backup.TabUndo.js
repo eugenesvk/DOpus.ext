@@ -103,7 +103,7 @@ function OnCloseTab(closeTabD) { // replace todo ↓
   var sV = Script.vars, sC = Script.config, DC = DOpus.Create
    ,tab = closeTabD.tab;
   var L = tab.lister;
-  dbgv("closed tab " + tab + ' path='+tab.path);
+  dbgv("closed tab " + tab + ' path='+tab.path+ ' crumbpath'+tab.crumbpath+" displayed_label="+tab.displayed_label);
   var tab_i = DC.Map();
   tab_i(k.lbl) 	= tab.label;
   tab_i(k.path)	= tab.path;
