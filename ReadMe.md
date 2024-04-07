@@ -13,9 +13,12 @@ description continued
 
 ## Install
 
+Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your `~\AppData\Roaming\GPSoftware\Directory Opus\Script AddIns` folder.
+
 ## Use
 
 - [Cmd.JumpItem↕](./Cmd.JumpItem↕.js) jump ↑/↓ by an arbitrary number of items with/out selection
+- [cb.FilterToggleOnThemeΔ](./cb.FilterToggleOnThemeΔ.js) automatically toggle Dark/Light variant of "Labels/Label Assignment" filter labels on Dark/Light Mode changes
 
 ### Backup
 - [backup.LayoutOn⎋](./backup.LayoutOn⎋.js) automatically save Lister layout when a Lister using this layout is closed normally (doesn't save on crashes) and on layout changes after user defined period has elapsed (helps saving before a crash)
