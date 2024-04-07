@@ -37,6 +37,7 @@ function OnInit(D) {
   C.add('OkClearHistory'    	).val(10                  	).g('vMisc').des("Do not ask for confirmation to clear history that has below this number of items");
   C.add('PosRestore'        	).val(true                	).g('vMisc').des("Try to restore tab's position (searches for the same tab/path to the left/right to match those at the time of closing)");
   C.add('PosEnd'            	).val(false               	).g('vMisc').des("(if position isn't restored) Reopen the tab at the end of the tab bar (false: reopen next to the currently active tab)");
+  C.add('Friendly::{FF}'    	).val(DC.Vector(1,"Path","🔖","No")).g('vMisc').des("For system folders with paths like '::{645FF...}' use friendly name 'Recycle Bin' in:\nPath\t replace path\n🔖\t add as a label\nNo\tno friendly names");
 
   C.add(" ⚠️").val("⇧ ⎈⌃ ⎇⌥ ◆❖⌘").g(' Keybind').des('Help: Can use ⎈ instead of Ctrl-. Only partially validated for correctness');
   C.add('✓'      	).val(DC.Vector('r','i','Alt-O'	)).g(' Keybind').des('Reopen selected tabs');
@@ -105,8 +106,26 @@ function OnCloseTab(closeTabD) { // replace todo ↓
   var L = tab.lister;
   dbgv("closed tab " + tab + ' path='+tab.path+ ' crumbpath'+tab.crumbpath+" displayed_label="+tab.displayed_label);
   var tab_i = DC.Map();
-  tab_i(k.lbl) 	= tab.label;
-  tab_i(k.path)	= tab.path;
+  if        (sC['Friendly::{FF}'] === 0) {; //Path
+    if ((tab.path+"").substr(0,3)==='::{') { // replace ::{abcd} with Recycle Bin
+      tab_i(k.path)	= tab.displayed_label;
+      tab_i(k.lbl) 	= tab.label;
+    } else {
+      tab_i(k.path)	= tab.path;
+      tab_i(k.lbl) 	= tab.label;
+    }
+  } else if (sC['Friendly::{FF}'] === 1) {; //Label
+    if ((tab.path+"").substr(0,3)==='::{') { // replace ::{abcd} with Recycle Bin
+      tab_i(k.path)	= tab.path;
+      tab_i(k.lbl) 	= tab.displayed_label;
+    } else {
+      tab_i(k.path)	= tab.path;
+      tab_i(k.lbl) 	= tab.label;
+    }
+  } else { // don't use friendly names
+    tab_i(k.path)	= tab.path;
+    tab_i(k.lbl) 	= tab.label;
+  };
   tab_i(k.time)	= getDate();
   var tab_lr = getTabNeighbors(tab);
   if (tab_lr[0]) {tab_i(tabNmL) = tab_lr[0];dbgv("+ "+tabNmL+"("+tab_lr[0].path+") to tab="+tab+" path="+tab.path)}
