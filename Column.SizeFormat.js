@@ -17,11 +17,13 @@ function OnInit(D) {
 
   var sV=D.vars, sC=D.config, DC=DOpus.Create, Sys=DC.SysInfo, C=new ConfigHelper(D);
   C.add("BinaryMultiplier"  	).val(false	).g('Misc').des("??READ FROM CONFIG?? Display size as Binary (2¹⁰=1024), otherwise Decimal (10³=1000)");
-  C.add("DebugOutput"       	).val(false	).g('Misc').des('Enable debug output in the script console ("Other" log)\nAdds "¦" alignment symbol and replaces decimal point spacePunctuation pad with "."');
+  C.add("DebugOutput"       	).val(false	).g('Debug').des('Enable debug output in the script console ("Other" log)\nAdds "¦" alignment symbol and replaces decimal point spacePunctuation pad with "."');
   C.add("ColumnHeaderFolder"	).val('🗁'  	).g('Title').des('Column Header symbol for a Folder');
   C.add("ColumnHeaderFile"  	).val('📁'  	).g('Title').des('Column Header symbol for a File');
-  C.add("ColumnHeaderLink"  	).val('🔗'  	).g('Title').des('Column Header symbol for a SoftLink');
-  C.add("LinkMark"          	).val('🔗'  	).g('Misc').des('Place this mark to the left of size value if it includes softlinks, e.g. "🔗5 M" means that some of that "5 M" is occupied by softlinks');
+  C.add("ColumnHeaderLink"  	).val('🔗'  	).g('Title').des('Column Header symbol for a SoftLink\n🔗🖇');
+  C.add("ColumnHeaderRec"   	).val('🗘'  	).g('Title').des('Column Header symbol for a recursion\n↻⭮🗘⟳⥁🔁🔃');
+  C.add("LinkMark"          	).val('🔗'  	).g('Format').des('Place this mark to the left of size value if it includes softlinks, e.g. "🔗5 M" means that some of that "5 M" is occupied by softlinks');
+  C.add("Sub0"              	).val('⋅'  	).g('Format').des('Replacement for 0-sized items •⋅-');
   C.add("spacePadnLabel").g('Format').des('# of spaces to pad each SizeLabel with + SizeLabel: ×En×Em×Number×Punctuation×Thin×Hair+SizeLabel\ne.g. "000001+b" for 1×Hair space and "b" for bytes, label can be blank').
     val(DOpus.Create.Vector()).
     val("000000+").
@@ -76,7 +78,7 @@ function OnAddColumns(addColData) {
   col.name     	= "SizeNoLinkRec";
   col.method   	= "OnColRecursiveNoLinks";
   col.label    	= "Size.No SoftLinks (Rec)";
-  col.header   	= "🗛✗" + sC.ColumnHeaderLink + "Rec";
+  col.header   	= "🗛✗" + sC.ColumnHeaderLink + sC.ColumnHeaderRec;
   // col.type  	= "size";
   col.defsort  	= -1;
   col.justify  	= "right";
@@ -98,7 +100,7 @@ function OnAddColumns(addColData) {
   col.name     	= "SizeWithLinkRec";
   col.method   	= "OnColRecursiveWithLinks";
   col.label    	= "Size.With SoftLinks (Rec)";
-  col.header   	= "🗛 Rec";
+  col.header   	= "🗛" + sC.ColumnHeaderRec;
   // col.type  	= "size";
   col.defsort  	= -1;
   col.justify  	= "right";
@@ -109,7 +111,7 @@ function OnAddColumns(addColData) {
   col.name     	= "SizeOnlyLinkRec";
   col.method   	= "OnColRecursiveDelta";
   col.label    	= "Size.Only SoftLinks (Rec)";
-  col.header   	= "🗛" + sC.ColumnHeaderLink + "Rec";
+  col.header   	= "🗛" + sC.ColumnHeaderLink + sC.ColumnHeaderRec;
   // col.type  	= "size";
   col.defsort  	= -1;
   col.justify  	= "right";
@@ -117,31 +119,29 @@ function OnAddColumns(addColData) {
   col.multicol 	= true;
 }
 
-function OnColShallowWithLinks  	(colD)	{ OnColMain(colD, false, true , false);}
-function OnColShallowNoLinks    	(colD)	{ OnColMain(colD, false, false, false);}
-function OnColRecursiveWithLinks	(colD)	{ OnColMain(colD, true , true , false);}
-function OnColRecursiveNoLinks  	(colD)	{ OnColMain(colD, true , false, false);}
-function OnColRecursiveDelta    	(colD)	{ OnColMain(colD, true , true , true );}
-function OnColMain(colD, IsRecursive, IsLinks, IsOnlyLinks) {
-  var isRec           	= (IsRecursive ? "Rec" : ""),
-      isLnk           	= (IsLinks ? "WithLink" : "NoLink"),
-      colName         	= "Size" + isLnk + isRec,
-      colOnlyName     	= "SizeOnlyLink" + isRec,
-      item            	= colD.item;
-      isJunctionOrLink	= (item.attr & 1024) != 0;
-      mark            	= "",
-      totalFiles      	= 0,
-      fileSize        	= DOpus.FSUtil.NewFileSize(0),
-      folderSize      	= DOpus.FSUtil.NewFileSize(0),
-      fileSizeLink    	= DOpus.FSUtil.NewFileSize(0),
-      folderSizeLink  	= DOpus.FSUtil.NewFileSize(0),
-      dbg("——————————\nitem = colD.item = " + item + "{" + item.size + "}");
+function OnColShallowWithLinks  	(colD)	{OnColMain(colD, false, true , false);}
+function OnColShallowNoLinks    	(colD)	{OnColMain(colD, false, false, false);}
+function OnColRecursiveWithLinks	(colD)	{OnColMain(colD, true , true , false);}
+function OnColRecursiveNoLinks  	(colD)	{OnColMain(colD, true , false, false);}
+function OnColRecursiveDelta    	(colD)	{OnColMain(colD, true , true , true );}
+function OnColMain(                                  colD, isRec,isLink,isOnlyLinks) {
+  var isRecNm       	= (isRec  ? "Rec"      : ""      ),
+    isLnk           	= (isLink ? "WithLink" : "NoLink"),
+    colName         	= "Size" + isLnk + isRecNm,
+    colOnlyName     	= "SizeOnlyLink" + isRecNm,
+    item            	= colD.item;
+    isJunctionOrLink	= (item.attr & 1024) != 0;
+    mark            	= "",
+    totalFiles      	= 0,
+    fileSize        	= DOpus.FSUtil.NewFileSize(0), fileSizeLink   = DOpus.FSUtil.NewFileSize(0),
+    folderSize      	= DOpus.FSUtil.NewFileSize(0), folderSizeLink = DOpus.FSUtil.NewFileSize(0);
+    dbg("——————————\nitem = colD.item = " + item + "{" + item.size + "}");
 
   if (!item.is_dir) { //file
-    if (IsLinks) { //resolve softlinks
+    if (isLink) { //resolve softlinks
       fileItem = DOpus.FSUtil.GetItem(DOpus.FSUtil.Resolve(item.RealPath,"j")); //Resolve symlink bug
       fileSize = fileItem.size
-      if (isJunctionOrLink && IsOnlyLinks) { fileSizeLink = fileSize;}
+      if (isJunctionOrLink && isOnlyLinks) { fileSizeLink = fileSize;}
       // if (isJunctionOrLink) { mark = sC.LinkMark;} //Mark only folders, files can be marked  within DOpus config
       // dbg("File: isJunctionOrLink=" + isJunctionOrLink);
     } else {
@@ -155,38 +155,38 @@ function OnColMain(colD, IsRecursive, IsLinks, IsOnlyLinks) {
     }
     if (colD.columns.exists(colName)) {
       colD.columns(colName).sort 	= fileSize;
-      colD.columns(colName).value	= mark + formatBytes(fileSize);
-      dbg("File: fileItem {fileSize} = " + fileItem + " {" + fileSize +"}/IsRecursive{" + IsRecursive + "}/IsLinks{" + IsLinks + "}");
+      colD.columns(colName).value	= mark + formatBytes(fileSize,mark);
+      dbg("File: fileItem {fileSize} = " + fileItem + " {" + fileSize +"}/isRec{" + isRec + "}/isLink{" + isLink + "}");
     }
     if (colD.columns.exists(colOnlyName)) {
       colD.columns(colOnlyName).sort 	= fileSizeLink;
-      colD.columns(colOnlyName).value	= mark + formatBytes(fileSizeLink);
-      dbg("FileOnlyLinks: fileItem {fileSizeLink} = " + fileItem + " {" + fileSizeLink +"}/IsRecursive{" + IsRecursive + "}/IsLinks{" + IsLinks + "}/IsOnlyLinks" + IsOnlyLinks);
+      colD.columns(colOnlyName).value	= mark + formatBytes(fileSizeLink,mark);
+      dbg("FileOnlyLinks: fileItem {fileSizeLink} = " + fileItem + " {" + fileSizeLink +"}/isRec{" + isRec + "}/isLink{" + isLink + "}/isOnlyLinks" + isOnlyLinks);
     }
   }
-  if (item.is_dir) { // && ( IsLinks || (!IsLinks && !isJunctionOrLink) ) check for "folder unless Junction with IsLinks option disabled" moved to function
+  if (item.is_dir) { // && ( isLink || (!isLink && !isJunctionOrLink) ) check for "folder unless Junction with isLink option disabled" moved to function
     iterate = 0;
-    readFolderSize(item, IsRecursive, IsLinks, IsOnlyLinks);
+    readFolderSize(item, isRec, isLink, isOnlyLinks);
     if (colD.columns.exists(colName)) {
       colD.columns(colName).sort 	= folderSize;
-      colD.columns(colName).value	= mark + formatBytes(folderSize);
-      dbg("Folder: item {folderSize} = " + item + " {" + folderSize +"}/IsRecursive{" + IsRecursive + "}/IsLinks{" + IsLinks + "}");
+      colD.columns(colName).value	= mark + formatBytes(folderSize,mark);
+      dbg("Folder: item {folderSize} = " + item + " {" + folderSize +"}/isRec{" + isRec + "}/isLink{" + isLink + "}");
     }
     if (colD.columns.exists(colOnlyName)) {
       colD.columns(colOnlyName).sort 	= folderSizeLink;
-      colD.columns(colOnlyName).value	= mark + formatBytes(folderSizeLink);
-      dbg("FolderOnlyLinks: item {folderSizeLink} = " + item + " {" + folderSizeLink +"}/IsRecursive{" + IsRecursive + "}/IsLinks{" + IsLinks + "}/IsOnlyLinks" + IsOnlyLinks);
+      colD.columns(colOnlyName).value	= mark + formatBytes(folderSizeLink,mark);
+      dbg("FolderOnlyLinks: item {folderSizeLink} = " + item + " {" + folderSizeLink +"}/isRec{" + isRec + "}/isLink{" + isLink + "}/isOnlyLinks" + isOnlyLinks);
     }
   }
 }
 
+var spaceM = ' ', spaceN = ' ',
+  NoSpace = '', spaceHair = ' ', spaceThin = ' ', spacePunc = ' ', spaceNumber = ' ',
+  spaceTH = spaceThin + spaceHair, spacePH = spacePunc + spaceHair;
 function configUnits() { //Read user config to
   // 1) set unit labels (e.g. b or B for bytes)
   // 2) set type and number of spaces to pad each unit with (e.g. two Hair spaces for 'k')
-  var sV = Script.vars, sC = Script.config, DC = DOpus.Create,
-    spaceM = ' ', spaceN = ' ',
-    NoSpace = '', spaceHair = ' ', spaceThin = ' ', spacePunc = ' ', spaceNumber = ' ',
-    spaceTH = spaceThin + spaceHair, spacePH = spacePunc + spaceHair;
+  var sV = Script.vars, sC = Script.config, DC = DOpus.Create;
   sV.set("k"          	, (sC.BinaryMultiplier == true) ? 1024 : 1000);
   sV.set("dmPad"      	, DC.vector( 0,  2,  2,  2,  2,  2,  2,  2,  2 )); //# of digits to pad to
   sV.set("dmLow"      	, DC.vector( 0,  1,  2,  2,  2,  2,  2,  2,  2 )); //# of decimals for low
@@ -218,16 +218,12 @@ function configUnits() { //Read user config to
   var spacePadCfg = sC.spacePadnLabel; //convert '000012+k' to spaces and 'k'
   for (var i = 0; i < spacePadCfg.count; i++) {
     var matches = spacePadCfg(i).match(/^\d+\+/i);
-    if (matches === null || matches.toString().length  !== 7) {
-      DOpus.Output("configUnits|ERROR|: spacePadnLabel must be 6 numbers and '+'! ERROR@line" + (i+1) + "={" + spacePadCfg(i) + "}");
-      return ''
-    }
+    if (matches === null || matches.toString().length  !== 7) {err("configUnits: spacePadnLabel must be 6 numbers and '+'! @line" + (i+1) + "={" + spacePadCfg(i) + "}");
+      return ''}
     var p = spacePadCfg(i).indexOf('+');
     // dbg("spacePadConvert: i=" + i + ", spacePadCfg(i)={" + spacePadCfg(i) + "}");
-    if (p == -1) {
-      DOpus.Output("configUnits|ERROR|: Missing '+' in spacePadnLabel! ERROR@line" + (i+1) + "={" + spacePadCfg(i) + "}");
-      return ''
-    }
+    if (p == -1) {err("configUnits: Missing '+' in spacePadnLabel! @line" + (i+1) + "={" + spacePadCfg(i) + "}");
+      return ''}
     var tempPad = "";
     for (var m = 0; m < p; m++) {
       if (isFontPreset)	{tempPad += StringUtil.repeat(sV.get("spaceList")(m), spacePadMap(fontCfg)(i)[m]);
@@ -261,11 +257,11 @@ function decimalPad(dec,len,chr,chrDec) {
   return dec;
 }
 
-function formatBytes(bytes,decimals) {
+function formatBytes(bytes,pre,decimals) {
   var sV=Script.vars, sC=Script.config, DC=DOpus.Create, Sys=DC.SysInfo;
   if(typeof(bytes) === "string") return bytes;
   // dbg("formatBytes: typeof(bytes) =" + typeof(bytes));
-  if(bytes == 0) return '0';
+  if(bytes == 0) return sC.Sub0;
   var dm       	= decimals <= 0 ? 0 : decimals || 2,
     k          	= sV.get("k"),
     i          	= Math.floor(Math.log(bytes) / Math.log(k)),
@@ -277,43 +273,44 @@ function formatBytes(bytes,decimals) {
     spaceCommon	= sV.get("spaceCommon"),
     spacePad   	= sV.get("spacePad"),
     sizeLabel  	= sV.get("sizeLabel"),
-    nPad       	= decimalPad(n, dmPad(i), padSym, padSymDec);
-  // dbg("n = " + n + "|sizeLabel(i) ={" + sizeLabel(i) + "}");
-  return nPad + padAlign + spacePad(i) + spaceCommon + sizeLabel(i);
+    nPad       	= decimalPad(n, dmPad(i), padSym, padSymDec)
+    markPad    	= (n<10)?(spaceNumber+spaceNumber):(n<100)?spaceNumber:'';
+  dbg("i="+i+ " n=" + n + "|sizeLabel(i) ={" + sizeLabel(i) + "} decimals="+T(decimals)+"="+decimals+" markPad=¦"+markPad+"¦");
+  return markPad + nPad + padAlign + spacePad(i) + spaceCommon + sizeLabel(i);
 }
 
-function readFolderSize(folder, IsRecursive, IsLinks, IsOnlyLinks) { //!!CHOKES on 4k folder list
-  var sV=D.vars, sC=D.config, DC=DOpus.Create, Sys=DC.SysInfo;
-  if ( !IsLinks && isJunctionOrLink) { return; } //exclude softlinks when IsLinks is false
+function readFolderSize(folder, isRec, isLink, isOnlyLinks) { //!!CHOKES on 4k folder list
+  var sV=Script.vars, sC=Script.config, DC=DOpus.Create, Sys=DC.SysInfo;
+  if ( !isLink && isJunctionOrLink) { return; } //exclude softlinks when isLink is false
   if (0 || sC.DebugOutput) iterate++;
   var isParentSoftLink = null;
-  if (IsLinks) {isParentSoftLink = (folder.attr & 1024) != 0;
-    if (isParentSoftLink) { mark = sC.LinkMark; }  }
+  if (isLink) {isParentSoftLink = (folder.attr & 1024) != 0;
+    if (isParentSoftLink) {mark = sC.LinkMark;}  }
   var folderEnum = DOpus.FSUtil.ReadDir(folder, false);
   while (!folderEnum.complete) {
     var folderItem = folderEnum.next;
     if (!folderItem.is_dir) { //file
-      if (IsLinks) { //add softlinks
+      if (isLink) { //add softlinks
         var isSoftLink = (folderItem.attr & 1024) != 0;
         if        (isSoftLink      )	{mark = sC.LinkMark; folderSizeLink.Add(folderItem.size)
         } else if (isParentSoftLink)	{mark = sC.LinkMark; folderSizeLink.Add(folderItem.size)}
         folderSize.Add(folderItem.size);
-        dbg("++readFolderSizeFile: folderItem !folder&&IsLinks  {folderItem.size / folderSize} = \n" + folderItem + "{" + folderItem.size +"}/{" + folderSize + "}");
+        dbg("++readFolderSizeFile: folderItem !folder&&isLink  {folderItem.size / folderSize} = \n" + folderItem + "{" + folderItem.size +"}/{" + folderSize + "}");
         // totalFiles++;
       } else { //exclude softlinks
         var  isSoftLink = (folderItem.attr & 1024) != 0;
-        if (!isSoftLink)  {folderSize.Add(folderItem.size);dbg("++readFolderSizeFile: folderItem !folder&&!IsLinks&&!Link  {folderItem.size / folderSize} = \n" + folderItem + "{" + folderItem.size +"}/{" + folderSize + "}");}
-        dbg("readFolderSizeFl✗Links: folderItem !folder&&!IsLinks&&Link  {folderItem.size / folderSize} = \n" + folderItem + "{" + folderItem.size +"}/{" + folderSize + "}");
+        if (!isSoftLink)  {folderSize.Add(folderItem.size);dbg("++readFolderSizeFile: folderItem !folder&&!isLink&&!Link  {folderItem.size / folderSize} = \n" + folderItem + "{" + folderItem.size +"}/{" + folderSize + "}");}
+        dbg("readFolderSizeFl✗Links: folderItem !folder&&!isLink&&Link  {folderItem.size / folderSize} = \n" + folderItem + "{" + folderItem.size +"}/{" + folderSize + "}");
         // totalFiles++;
       }
     } else { //folder, pass through the same function unless it's a softlink
-      if   ( IsLinks   ) {readFolderSize(folderItem, IsRecursive, IsLinks, IsOnlyLinks); //add softlinks
-        dbg("readFolderSize.Fold|Rec: folderItem folder&&IsLinks  iterate{folderSize} = \n" + iterate + "|" +folderItem + "{" + folderSize + "}");
+      if   ( isLink   ) {isRec?readFolderSize(folderItem, isRec, isLink, isOnlyLinks):''; //add softlinks
+        dbg("readFolderSize.Fold|Rec: folderItem folder&&isLink  iterate{folderSize} = \n" + iterate + "|" +folderItem + "{" + folderSize + "}");
         // totalFiles++;
       } else { //exclude softlinks
         var isSoftLink = (folderItem.attr & 1024) != 0;
-        if (!isSoftLink) {readFolderSize(folderItem, IsRecursive, IsLinks, IsOnlyLinks); dbg("readFolderSize.Fold|Rec: folderItem folder&&!IsLinks&&!Link  iterate{folderSize} = \n" + iterate + "|" + folderItem + "{" + folderSize + "}");}
-        dbg("readFolderSize.Fold|✗Links: folderItem folder&&!IsLinks&&Link  {folderSize} = \n" + iterate + "|" + folderItem + "{" + folderSize + "}");
+        if (!isSoftLink) {isRec?readFolderSize(folderItem, isRec, isLink, isOnlyLinks):''; dbg("readFolderSize.Fold|Rec: folderItem folder&&!isLink&&!Link  iterate{folderSize} = \n" + iterate + "|" + folderItem + "{" + folderSize + "}");}
+        dbg("readFolderSize.Fold|✗Links: folderItem folder&&!isLink&&Link  {folderSize} = \n" + iterate + "|" + folderItem + "{" + folderSize + "}");
       }
     }
   }
@@ -325,4 +322,4 @@ var StringUtil = {
   //other related string functions...
 }
 //Help
-  // item.attr & 1024 is FILE_ATTRIBUTE_REPARSE_POINT from https://docs.microsoft.com/en-gb/windows/desktop/FileIO/file-attribute-constants: A file or directory that has an associated reparse point, or a file that is a symbolic link
+  // item.attr & 1024 is FILE_ATTRIBUTE_REPARSE_POINT docs.microsoft.com/en-gb/windows/desktop/FileIO/file-attribute-constants: A file or directory that has an associated reparse point, or a file that is a symbolic link
