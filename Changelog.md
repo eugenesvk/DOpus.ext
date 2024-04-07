@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file
   <!-- vulnerabilities -->
 
 - __Added__
+  + :sparkles: `cb.FilterToggleOnThemeΔ` to automatically toggle Dark/Light variant of "Labels/Label Assignment" filter labels on Dark/Light Mode changes
   + :sparkles: `Cmd.JumpItem↕` to jump ↑/↓ by an arbitrary number of items with/out selection
   + :sparkles: `backup.LayoutOn⎋` automatically save Lister layout
   + :sparkles: `Column.AttrShort` short attribute column
