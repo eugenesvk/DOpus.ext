@@ -25,9 +25,9 @@ function OnInit(D) {
 
   var uid = "1fdacb64921042caafd867acd726cdb9";
   var cfg = new ConfigHelper(D);
-  cfg.add("DebugOutput" 	).g('Debug'	).val(false	).des('Enable debug output in the "Script log"')
-  cfg.add("DebugClear"  	).g('Debug'	).val(false	).des("Clear log messages from the Opus Output Window between script runs")
-  cfg.add("DebugVerbose"	).g('Debug'	).val(false	).des('More verbose debug (e.g., event callbacks) in the "Script log"')
+  cfg.add("DebugOutput" 	).g('  Debug'	).val(false	).des('Enable debug output in the "Script log"')
+  cfg.add("DebugClear"  	).g('  Debug'	).val(false	).des("Clear log messages from the Opus Output Window between script runs")
+  cfg.add("DebugVerbose"	).g('  Debug'	).val(false	).des('More verbose debug (e.g., event callbacks) in the "Script log"')
 
   cfg.add("Always On"             	).g('Misc'  	).val(true         	).des("Enable script execution without the use of environment variables")
   cfg.add("Exclude Layouts"       	).g('Filter'	).val(DC.Vector("")	).des("Names of the saved layouts the script should NOT update")

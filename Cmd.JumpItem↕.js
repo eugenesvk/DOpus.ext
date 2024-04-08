@@ -17,7 +17,7 @@ function OnInit(D) {
   D.default_enable	= true; D.min_version = '12.0'; D.copyright = "©es"; var uid = "e435cf1c64394e4ab3f7f838a37b7129";
 
   var cfg = new ConfigHelper(D);
-  cfg.add("DebugOutput").val(false).g('Debug').des('Enable debug output in the "Script log"');
+  cfg.add("DebugOutput").val(false).g('  Debug').des('Enable debug output in the "Script log"');
 }
 
 function OnAddCommands(addCmdD) {

@@ -17,7 +17,7 @@ function OnInit(D) {
 
   var sV=D.vars, sC=D.config, DC=DOpus.Create, Sys=DC.SysInfo, C=new ConfigHelper(D);
   C.add("BinaryMultiplier"  	).val(false	).g('Misc').des("??READ FROM CONFIG?? Display size as Binary (2¹⁰=1024), otherwise Decimal (10³=1000)");
-  C.add("DebugOutput"       	).val(false	).g('Debug').des('Enable debug output in the script console ("Other" log)\nAdds "¦" alignment symbol and replaces decimal point spacePunctuation pad with "."');
+  C.add("DebugOutput"       	).val(false	).g('  Debug').des('Enable debug output in the script console ("Other" log)\nAdds "¦" alignment symbol and replaces decimal point spacePunctuation pad with "."');
   C.add("ColumnHeaderFolder"	).val('🗁'  	).g('Title').des('Column Header symbol for a Folder');
   C.add("ColumnHeaderFile"  	).val('📁'  	).g('Title').des('Column Header symbol for a File');
   C.add("ColumnHeaderLink"  	).val('🔗'  	).g('Title').des('Column Header symbol for a SoftLink\n🔗🖇');
