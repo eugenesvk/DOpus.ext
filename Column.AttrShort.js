@@ -18,22 +18,32 @@
 
 function OnInit(D) {
   D.name          	= "Column.AttrShort";
-  D.desc          	= "Column formatted with shorter attribute indicators (no '-') and reverse 'i' that is only shown when content indexing is enabled";
+  D.desc          	= "Column formatted with shorter attribute indicators (no '-'), reverse 'i' shown when content indexing is enabled, and smaller symbols ₐ vs a"
+   +"\n"          	+ "(click ⚙ to configure)";
   D.version       	= "1.0@18-10";
   D.url           	= "";
   D.default_enable	= true; D.min_version = "12.5"; D.copyright = "es";
 
   var C = new ConfigHelper(D);
-  C.add("DebugOutput"	).val(false	).des('Enable debug output in the "Script log"');
-  C.add("excludeAttr"	).val(""   	).des('Hide any attributes from "acehioprs" (Archive, Compressed, Encrypted, Hidden, Indexed, Offline, Pinned, Readonly, System)');
+  C.add("a"          	).val("ₐ"  	).g('Replace'	).des('Replace Archive attribute with...');
+  C.add("c"          	).val("c"  	).g('Replace'	).des('Replace Compressed attribute with...');
+  C.add("e"          	).val("ₑ"  	).g('Replace'	).des('Replace Encrypted attribute with...');
+  C.add("h"          	).val("ₕ"  	).g('Replace'	).des('Replace Hidden attribute with...');
+  C.add("i"          	).val("ⁱ"  	).g('Replace'	).des('Replace Indexed attribute with...');
+  C.add("o"          	).val("ₒ"  	).g('Replace'	).des('Replace Offline attribute with...');
+  C.add("p"          	).val("ₚ"  	).g('Replace'	).des('Replace Pinned attribute with...');
+  C.add("r"          	).val("r"  	).g('Replace'	).des('Replace Readonly attribute with...');
+  C.add("s"          	).val("ₛ"  	).g('Replace'	).des('Replace System attribute with...');
+  C.add("DebugOutput"	).val(false	).g('  Debug'	).des('Enable debug output in the "Script log"');
 }
 
 function OnScriptConfigChange(configChangeData) { configUnits(); }
 
+var colNmAttr = 'Attributes'
 function OnAddColumns(addColD) {
   configUnits();
   var col = addColD.AddColumn();
-  col.name     	= "Attributes";
+  col.name     	= colNmAttr;
   col.method   	= "OnColMain";
   col.label    	= "Attributes.Short";
   col.header   	= "At";
@@ -46,25 +56,32 @@ function OnAddColumns(addColD) {
 function OnColMain(scriptColD) {
   var sV=Script.vars, sC=Script.config, DC=DOpus.Create;
   var itemAttr     	= scriptColD.item.fileattr;
-  if (!itemAttr)   	{ return }
+  if (!itemAttr)   	{return}
   var itemAttrShort	= itemAttr.ToString().replace(/\-/g, '');
   var myAttr       	= DOpus.FSUtil.NewFileAttr(itemAttrShort); //need own FileAttr to allow changes
-  var excludeAttr  	= sV.get("excludeAttr");
-  if (myAttr.i)    	{myAttr.Clear("i");
-  } else           	{myAttr.Set  ("i");}
+  var subMap       	= sV.get('subMap');
+  if (myAttr.i)    	{ myAttr.Clear('i');
+  } else           	{ myAttr.Set  ('i');}
   var myAttrShort  	= myAttr.ToString().replace(/\-/g, '');
-  for (var i=0; i<excludeAttr.length; i++) {
-    var sub = excludeAttr.substring(i,i+1);
-    if (myAttrShort.indexOf(sub) > -1) {myAttrShort	= myAttrShort.replace(sub, '');
-      // p("Removed excludeAttr.substring(i,i+1):{" + excludeAttr.substring(i,i+1) + "}");
-    }
-  }
-  if (scriptColD.columns.exists("Attributes")) {scriptColD.columns("Attributes").value	= myAttrShort;
-    dbg("" + itemAttr + " less '" + excludeAttr + "'='" + myAttrShort + "'@" + scriptColD.item);}
+  for (var e=new Enumerator(subMap); !e.atEnd(); e.moveNext()) {src = e.item(); sub = subMap(src);
+    if (myAttrShort.indexOf(src) > -1) {myAttrShort = myAttrShort.replace(src,sub);}  }
+  if (scriptColD.columns.exists(colNmAttr)) {
+    scriptColD  .columns       (colNmAttr).value = myAttrShort;}
+    // dbg("" + itemAttr + " less '" + excludeAttr + "'='" + myAttrShort + "'@" + scriptColD.item);}
 }
 
-function configUnits() { //Read user config to
-  var sV = Script.vars, sC = Script.config;
-  sV.set("excludeAttr", sC.excludeAttr);
-  dbg("configUnits|End|: excludeAttr = {" + sC.excludeAttr + "}");
+function configUnits() { // Read user config and save on config updates with a callback
+  var sV = Script.vars, sC = Script.config, DC = DOpus.Create;
+  var subMap = DC.Map();
+  subMap("a") = sC.a;
+  subMap("c") = sC.c;
+  subMap("e") = sC.e;
+  subMap("h") = sC.h;
+  subMap("i") = sC.i;
+  subMap("o") = sC.o;
+  subMap("p") = sC.p;
+  subMap("r") = sC.r;
+  subMap("s") = sC.s;
+  sV.set("subMap", subMap);
+  dbg("configUnits|End|: subMap="+map2str(subMap));
 }
