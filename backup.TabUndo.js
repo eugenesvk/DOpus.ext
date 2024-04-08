@@ -37,6 +37,7 @@ function OnInit(D) {
   C.add('OkClearHistory'    	).val(10                  	).g('vMisc').des("Do not ask for confirmation to clear history that has below this number of items");
   C.add('PosRestore'        	).val(true                	).g('vMisc').des("Try to restore tab's position (searches for the same tab/path to the left/right to match those at the time of closing)");
   C.add('PosEnd'            	).val(false               	).g('vMisc').des("(if position isn't restored) Reopen the tab at the end of the tab bar (false: reopen next to the currently active tab)");
+  C.add('▋glueTΔ'           	).val(12                  	).g('vMisc').des("Treat selection evens coming in within this time threshold (in ms) of each other as one selection for undo purposes\n(e.g., single ▼ is 1 deselection + 1 selection event, this tries to catch these as 1 undo)");
   C.add('Friendly::{FF}'    	).val(DC.Vector(1,"Path","🔖","No")).g('vMisc').des("For system folders with paths like '::{645FF...}' use friendly name 'Recycle Bin' in:\nPath\t replace path\n🔖\t add as a label\nNo\tno friendly names");
 
   C.add(" ⚠️").val("⇧ ⎈⌃ ⎇⌥ ◆❖⌘").g(' Keybind').des('Help: Can use ⎈ instead of Ctrl-. Only partially validated for correctness');
@@ -403,46 +404,71 @@ function OnUndoTabCloseUI(cmdD) {
   var retVal = Dlg.Show(); // run as detached, need event loop to catch hotkeys and box checking
   var retHK=0, retBtn=0, retClick=0;
   var isOpenL=false, isOpenR=false;
-  var sel_undo=DC.Map(), sel_redo=DC.Map();
+  var sel_undo=DC.Map(); //, sel_redo=DC.Map();
   sel_undo(var_names[0]) = DC.Vector(); sel_undo(var_names[1]) = DC.Vector();
-  sel_redo(var_names[0]) = DC.Vector(); sel_redo(var_names[1]) = DC.Vector();
+  // sel_redo(var_names[0]) = DC.Vector(); sel_redo(var_names[1]) = DC.Vector();
   var by = sC['▼▲⋅X']
   var sh = new ActiveXObject("WScript.Shell");
-  var sel_save = true; // don't save artificial selection events
-  var undo_count=0, redo_count=0; // uninterrupted sequence of un/re-dos should go further back; reset on re/un-do|real selchange
+  var sel_script = false; // don't save selection events emitted by this script
+  var undo_count=0;// uninterrupted sequence of un/re-dos should go further back; reset on re/un-do|real selchange
+  t_step_ms(); // measures ms passed since this point and the next invocation to measure selchange event timings
+  var glue_ms = sC['▋glueTΔ'];
+  function sel_undo_f(isBtn) {
+    // if (typeof isBtn == 'undefined') {isBtn = false;}
+    for (var i=0;i<var_names.length;i++) {
+      var tabNmSide = var_names[i];
+      var lv=Dlg.Control(tabNmSide);
+      var lv=Dlg.Control(tabNmSide);
+      if ((lv.focus) || isBtn) { // buttons steal focus from the listview
+        var sel_vec = sel_undo(tabNmSide);
+        if (sel_vec.length > 1) {
+          undo_count += 1;
+          var undo_i = sel_vec.length - undo_count - 1; //~2=sel/desel event for 1 selection change (but only for simple ones), might bug on 1st or no sel, todo: fix if bugs
+          if ((undo_i >= 0) && (undo_i < sel_vec.length)){
+            var sel_items_prev = sel_vec(undo_i);
+            var sel_ids = vecItem2Idx(sel_items_prev); //vec(DialogListItem) → vec(Indices)
+            // sel_redo(tabNmSide).push_back(sel_ids); // save for redo
+            sel_script = true; // prevent this event from being recorded
+            // dbgv("undid selection, set sel_script to true");dbgv(T(sel_ids)+" #"+sel_ids.length+" = "+vec2str(sel_ids));
+            lv.value=sel_ids;
+            Dlg.SetTimer(1,'sel_script_reset'); // reset status on a timer (direct reset fails)
+          } else {undo_count=sel_vec.length-1; dbgv("Reached the first of selection history #"+undo_i+" of #"+sel_vec.length+" undo_count #"+undo_count)}
+        } else {lv.value=DC.Vector();dbgv("No saved selection history changes to undo, reset all #"+sel_vec.length)}
+      }
+    }
+  }
+  function sel_redo_f(isBtn) {
+    // if (typeof isBtn == 'undefined') {isBtn = false;}
+    for (var i=0;i<var_names.length;i++) {
+      var tabNmSide = var_names[i];
+      var lv=Dlg.Control(tabNmSide);
+      if ((lv.focus) || isBtn) { // buttons steal focus from the listview
+        var sel_vec = sel_undo(tabNmSide);
+        if (sel_vec.length > 1) {
+          undo_count -= 1;
+          var redo_i = sel_vec.length - undo_count - 1; //~2=sel/desel event for 1 selection change (but only for simple ones), might bug on 1st or no sel, todo: fix if bugs
+          if ((redo_i >= 0) && (redo_i < sel_vec.length)) {
+            var sel_items_next = sel_vec(redo_i);
+            var sel_ids = vecItem2Idx(sel_items_next); //vec(DialogListItem) → vec(Indices)
+            sel_script = true; // prevent this event from being recorded
+            // dbgv("redid selection, set sel_script to true");dbgv(T(sel_ids)+" #"+sel_ids.length+" = "+vec2str(sel_ids));
+            lv.value=sel_ids;
+            Dlg.SetTimer(1,'sel_script_reset'); // reset status on a timer (direct reset fails)
+          } else {undo_count=0; dbgv("Reached the last of selection history #"+redo_i+" of #"+sel_vec.length+" undo_count #"+undo_count)}
+        } else {dbgv("No saved selection history changes to redo #"+sel_vec.length)}
+      }
+    }
+  }
+
   while (true) {
     var Msg = Dlg.GetMsg();
     if (!Msg.result) break;
     dbgv("Msg Event = " + Msg.event +" Control="+T(Msg.control)+"="+Msg.control);
     if (  Msg.event === "hotkey") {
-      if (hk('✓').exists 	(Msg.control)) {dbgv('hkY');retHK=1; break;}
-      if (hk('⎋').exists 	(Msg.control)) {dbgv('hkN');retHK=0; break;}
-      /*
-      if (hk('⎌▋').exists	(Msg.control)) {dbgv('hkU undo select');
-        for (var i=0;i<var_names.length;i++) {
-          var tabNmSide = var_names[i];
-          var lv=Dlg.Control(tabNmSide);
-          if (lv.focus) {
-            var sel_vec = sel_undo(tabNmSide);
-            if (sel_vec.length > 1) {
-              undo_count += 1;
-              var undo_i = sel_vec.length - 2 * undo_count - 1; //~2=sel/desel event for 1 selection change (but only for simple ones), might bug on 1st or no sel, todo: fix if bugs
-              if (undo_i >= 0) {
-                var sel_items_prev = sel_vec(undo_i);
-                var sel_ids = vecItem2Idx(sel_items_prev); //vec(DialogListItem) → vec(Indices)
-                sel_redo(tabNmSide).push_back(sel_ids); // save for redo
-                sel_save = false; // prevent this event from being recorded
-                  dbgv("undid selection, set sel_save to false");dbgv(T(sel_ids)+" #"+sel_ids.length+" = "+vec2str(sel_ids));
-                lv.value=sel_ids;
-                  dbgv("reset sel_save to true, undo_i="+undo_i);
-                // sel_save = true; // prevent this event from being recorded
-              } else {dbgv("Reached the first of selection history #"+undo_i+" of #"+sel_vec.length)}
-            } else {lv.value=DC.Vector();dbgv("No saved selection history changes to undo #"+sel_vec.length)}
-          }
-        }
-      }
-      if (hk('↷▋').exists	(Msg.control)) {dbgv('hkR TODO redo select');}
-      */
+      if (hk('✓').exists    	(Msg.control)) {dbgv('hkY');retHK=1; break;}
+      if (hk('⎋').exists    	(Msg.control)) {dbgv('hkN');retHK=0; break;}
+      if (hk('⎌▋').exists   	(Msg.control)) {dbgv('hkU ⎌▋'); sel_undo_f();}
+      if (hk('↷▋').exists   	(Msg.control)) {dbgv('hkR ↷▋'); sel_redo_f();}
       if (hk('‹Open').exists	(Msg.control)) { // check force side box and uncheck the other one
         var c=Dlg.Control('isOpen‹'); c.value=!c.value; dbgv('hkOpenL ' + c.value); isOpenL=c.value;
         if (c.value) {var d=Dlg.Control('isOpen›'); d.value=false; dbgv('hkOpenR ' + d.value);}}
@@ -482,25 +508,24 @@ function OnUndoTabCloseUI(cmdD) {
       if (Msg.control === var_names[0]) {dbgv('🖰⋅2'); retClick=1; break;}
       if (Msg.control === var_names[1]) {dbgv('🖰⋅2'); retClick=1; break;}
     }
-    /*
-    if (  Msg.event === "selchange") {
-      dbgv("control="+Msg.control+" data="+Msg.data+" index="+Msg.index+" value="+Msg.value);
+    if (Msg.event === "timer") {
+      if (Msg.Control ==='sel_script_reset') {Dlg.KillTimer('sel_script_reset'); sel_script = false; dbgv("reset sel_script to false");}
+    }
+    if (  Msg.event === "selchange") {dbgv("control="+Msg.control+" data="+Msg.data+" index="+Msg.index+" value="+Msg.value);
       var tabNmSide = Msg.control;
       var lv=Dlg.Control(tabNmSide);
-      if (sel_save) {
-        sel_undo(tabNmSide).push_back(lv.value);
-        undo_count = 0; // after this start undo anew
-        redo_count = 0; // after this start undo anew
-        dbgv("saved to sel_undo "+tabNmSide+" #"+lv.value.count+" sel_save="+sel_save);  //store new selections to be able to undo later //vec(DialogListItem)
-      } else {err("     ✗✗✗✗ selchange false");}
+      if (sel_script) {dbgv("script-driven selection, do not save undos");
+      } else {elapsed_ms = t_step_ms(); // save undo and reset undo count
+        if (  elapsed_ms > glue_ms) { // save undo only for "spread out" events, trying to treat closed-timed selections as 1 user selection
+          sel_undo(tabNmSide).push_back(lv.value); undo_count=0;
+          dbgv("saved to sel_undo "+tabNmSide+" #"+lv.value.count+" sel_script="+sel_script+" 🕐Δ="+elapsed_ms); }
+      }
     }
-    */
     if (  Msg.event === "click") {
       if (Msg.control === "btnY"   ) {dbgv('btnY'); retBtn=1; break;}
       if (Msg.control === "btnN"   ) {dbgv('btnN'); retBtn=0; break;}
-      // if (Msg.control === "btnU"   ) {dbgv('btnU undo select'); lv.value=DC.Vector(0,3);}
-      // if (Msg.control === "btnU"   ) {dbgv('btnU undo select'); lv.value=sel_undo.back(); sel_redo.push_back(sel_undo.back());}
-      // if (Msg.control === "btnR"   ) {dbgv('btnR TODO redo select');}
+      if (Msg.control === "btnU"   ) {dbgv('btnU ⎌▋');sel_undo_f(1);}
+      if (Msg.control === "btnR"   ) {dbgv('btnR ↷▋');sel_redo_f(1);}
       if (Msg.control === "isOpen‹") {dbgv('isOpen‹' + Msg.data); isOpenL=Msg.data;}
       if (Msg.control === "isOpen›") {dbgv('isOpen›' + Msg.data); isOpenR=Msg.data;}
     }
@@ -612,11 +637,11 @@ function getHotkey(force) {
     <columns><item text="🕐"/><item text="🔖"/><item text="‹tab paths"/></columns></control>
   <control name="tab✗›" type="listview" viewmode="details" fullrow="yes"  width="234" x="0" y="56" height="56" multisel="yes" resize="yw">
     <columns><item text="🕐"/><item text="🔖"/><item text="tab› paths"/></columns></control>
-  <control                        	name="isOpen‹"	x= "50"	width="30"	y="115"	height="10"	resize="wsy"	title="‹&amp;Open"          	type="check" />
-  <!-- <control                   	name="btnU"   	x= "84"	width="32"	y="113"	height="14"	resize="wsy"	title="TODO⎌▋ &amp;Undo Sel"	type="button"/> -->
-  <!-- <control                   	name="btnR"   	x="118"	width="32"	y="113"	height="14"	resize="wsy"	title="TODO↷▋ &amp;Redo Sel"	type="button"/> -->
-  <control                        	name="isOpen›"	x="154"	width="30"	y="115"	height="10"	resize="wsy"	title="O&amp;pen›"          	type="check" />
-  <control close="1" default="yes"	name="btnY"   	x="188"	width="40"	y="113"	height="14"	resize="wsy"	title="✓&amp;Reopen"        	type="button"/>
-  <control close="0"              	name="btnN"   	x=  "4"	width="40"	y="113"	height="14"	resize="wsy"	title="✗&amp;Cancel"        	type="button"/>
+  <control                        	name="isOpen‹"	x= "50"	width="30"	y="115"	height="10"	resize="wsy"	title="‹&amp;Open"      	type="check" />
+  <control                        	name="btnU"   	x= "84"	width="32"	y="113"	height="14"	resize="wsy"	title="⎌▋ &amp;Undo Sel"	type="button"/>
+  <control                        	name="btnR"   	x="118"	width="32"	y="113"	height="14"	resize="wsy"	title="↷▋ &amp;Redo Sel"	type="button"/>
+  <control                        	name="isOpen›"	x="154"	width="30"	y="115"	height="10"	resize="wsy"	title="O&amp;pen›"      	type="check" />
+  <control close="1" default="yes"	name="btnY"   	x="188"	width="40"	y="113"	height="14"	resize="wsy"	title="✓&amp;Reopen"    	type="button"/>
+  <control close="0"              	name="btnN"   	x=  "4"	width="40"	y="113"	height="14"	resize="wsy"	title="✗&amp;Cancel"    	type="button"/>
 </dialog></resource>
 </resources>
