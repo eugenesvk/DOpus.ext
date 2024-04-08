@@ -7,7 +7,7 @@ function OnInit(D) {
   D.name          	= "backup.TabUndo";
   D.desc          	= "Automatically save Lister closed tabs on a per-lister-layout basis" + "\n"
     +""           	+ "(click ⚙ to configure)";
-  D.version       	= '0.2@24-04';
+  D.version       	= '0.3@24-04';
   D.url           	= '';
   D.default_enable	= true; D.min_version = '13.0'; D.copyright = "©es"; var uid = "7fb5996cdd6040b0abcb7e4c73b80261";
 
