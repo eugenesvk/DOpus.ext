@@ -19,6 +19,7 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
 
 - [Cmd.JumpItem↕](./Cmd.JumpItem↕.js) jump ↑/↓ by an arbitrary number of items with/out selection
 - [cb.FilterToggleOnThemeΔ](./cb.FilterToggleOnThemeΔ.js) automatically toggle Dark/Light variant of "Labels/Label Assignment" filter labels on Dark/Light Mode changes
+- [Cmd.TabDedupe](Cmd.TabDedupe) command to close duplicate tabs protecting current tab, can be added to your close/open tab buttons/shortcuts to avoid accumulating many duplicate tabs
 
 ### Backup
 - [backup.LayoutOn⎋](./backup.LayoutOn⎋.js) automatically save Lister layout when a Lister using this layout is closed normally (doesn't save on crashes) and on layout changes after user defined period has elapsed (helps saving before a crash)
@@ -54,5 +55,6 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
   - JumpItem↕ isn't performant in folders with many items, use JumpItemCursor↕, but both have issues on key hold:
     - JumpItemCursor↕ is fluid, but on key release continues to execute for a few iterations
     - JumpItem↕ skips some executions; stops faster vs↑, but also not immediately
+- [Cmd.TabDedupe](Cmd.TabDedupe) `TabDedupe dual noprotect` then `Go CURRENT NEWTAB` opens a new tab at the end of the tabbar insted of next to the last tab even though it's visibly selected
 
 ## Credits
