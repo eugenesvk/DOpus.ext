@@ -46,6 +46,8 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
 ### Columns
 - [Column.AttrShort](./Column.AttrShort.js) adds a column with short file attributes (without `-` padding), which also displays `i` indexing status for those files that have content indexing enabled (default is otherwise, files with content indexing disabled have a confusing `i` indicator)
 - [Column.SizeFormat](./Column.SizeFormat.js) adds columns with with shorter and vertically aligned size indicators that also allow custom handling of symlinks
+- [Column.FileAccess](./Column.FileAccess.js) to show file read-only/read-write/noaccess status with customizable labels
+
 
 ## Known issues
 - [Column.SizeFormat](./Column.SizeFormat.js) not performant in folders with many items due to an unavoidable per-item JScript overhead, but looks nice :)
