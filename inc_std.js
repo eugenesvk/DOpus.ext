@@ -59,3 +59,20 @@ function vec2str(vec) { //todo: add separator
 function T(t) {return DOpus.TypeOf(t)}
 function getDate() {return DOpus.Create.Date().Format();}
 
+// Time benchmarking functions
+function   sec( ) {return d2sec(DOpus.Create.Date());} // get current time h:m:s.ms in seconds (but includes ms)
+function   ms ( ) {return d2ms (DOpus.Create.Date());} // get current time h:m:s.ms in ms
+function d2sec(d) {return      (60*(60*d.hour + d.min) + d.sec) + d.ms/1000;} // convert h:m:s.ms to seconds
+function d2ms (d) {return 1000*(60*(60*d.hour + d.min) + d.sec) + d.ms     ;} // convert h:m:s.ms to ms
+function preciseTd(n) {
+  var t=preciseTd;
+  if (typeof t.Init == 'undefined') {t.Init = true; t.start = DOpus.Create.Date();}
+  return (ms() - d2ms(t.start))
+}
+function t_step_ms(n) { // get ms passed since last invocation of he same function
+  var t=t_step_ms;
+  if (typeof t.Init == 'undefined') {t.Init = true; t.prev = DOpus.Create.Date();}
+  t_diff = ms() - d2ms(t.prev);
+  t.prev = DOpus.Create.Date(); // reset prev
+  return t_diff
+}
