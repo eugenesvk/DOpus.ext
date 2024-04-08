@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file
   <!-- vulnerabilities -->
 
 - __Added__
+  + :sparkles: attribute user customization to `Column.AttrShort`
   + :sparkles: `Cmd.TabDedupe` commands to close duplicate tabs protecting current tab
   + :sparkles: add un/re-do selection function to backup.TabUndo
   + :sparkles: `cb.FilterToggleOnThemeΔ` to automatically toggle Dark/Light variant of "Labels/Label Assignment" filter labels on Dark/Light Mode changes
