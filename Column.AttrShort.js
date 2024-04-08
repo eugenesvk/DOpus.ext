@@ -20,7 +20,7 @@ function OnInit(D) {
   D.name          	= "Column.AttrShort";
   D.desc          	= "Column formatted with shorter attribute indicators (no '-'), reverse 'i' shown when content indexing is enabled, and smaller symbols ₐ vs a"
    +"\n"          	+ "(click ⚙ to configure)";
-  D.version       	= "1.0@18-10";
+  D.version       	= "1.1@24-04";
   D.url           	= "";
   D.default_enable	= true; D.min_version = "12.5"; D.copyright = "es";
 
