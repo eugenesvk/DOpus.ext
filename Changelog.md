@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file
   <!-- vulnerabilities -->
 
 - __Added__
+  + :sparkles: `Column.FileAccess` to show file read-only/read-write/noaccess status
   + :sparkles: attribute user customization to `Column.AttrShort`
   + :sparkles: `Cmd.TabDedupe` commands to close duplicate tabs protecting current tab
   + :sparkles: add un/re-do selection function to backup.TabUndo
