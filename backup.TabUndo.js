@@ -49,14 +49,14 @@ function OnInit(D) {
   C.add('Open›'  	).val(DC.Vector('p'            	)).g(' Keybind').des('force open right');
   C.add('Nav◀⭾'  	).val(DC.Vector('1','d'        	)).g(' Keybind').des('switch to top    panel');
   C.add('Nav▶⭾'  	).val(DC.Vector('2','f'        	)).g(' Keybind').des('switch to bottom panel');
-  C.add('Nav▼'   	).val(DC.Vector('j'            	)).g(' Keybind').des('▼nav without (de)selection');
-  C.add('Nav▲'   	).val(DC.Vector('k'            	)).g(' Keybind').des('▲nav without (de)selection');
-  C.add('Nav▼▋'  	).val(DC.Vector('⇧j'           	)).g(' Keybind').des('▼nav with extending selection');
-  C.add('Nav▲▋'  	).val(DC.Vector('⇧k'           	)).g(' Keybind').des('▲nav with extending selection');
-  C.add('Nav▼5'  	).val(DC.Vector('m'            	)).g(' Keybind').des('▼⋅5 nav without (de)selection');
-  C.add('Nav▲5'  	).val(DC.Vector(','            	)).g(' Keybind').des('▲⋅5 nav without (de)selection');
-  C.add('Nav▼5▋' 	).val(DC.Vector('⇧m'           	)).g(' Keybind').des('▼⋅5 nav with extending selection');
-  C.add('Nav▲5▋' 	).val(DC.Vector('⇧,'           	)).g(' Keybind').des('▲⋅5 nav with extending selection');
+  C.add('Nav▼'   	).val(DC.Vector('j'            	)).g(' Keybind').des('move cursor ▼ without (de)selection');
+  C.add('Nav▲'   	).val(DC.Vector('k'            	)).g(' Keybind').des('move cursor ▲ without (de)selection');
+  C.add('Nav▼▋'  	).val(DC.Vector('⇧j'           	)).g(' Keybind').des('move cursor ▼ with extending ▋selection');
+  C.add('Nav▲▋'  	).val(DC.Vector('⇧k'           	)).g(' Keybind').des('move cursor ▲ with extending ▋selection');
+  C.add('Nav▼5'  	).val(DC.Vector('m'            	)).g(' Keybind').des('move cursor ▼ 5 times without (de)selection');
+  C.add('Nav▲5'  	).val(DC.Vector(','            	)).g(' Keybind').des('move cursor ▲ 5 times without (de)selection');
+  C.add('Nav▼5▋' 	).val(DC.Vector('⇧m'           	)).g(' Keybind').des('move cursor ▼ 5 times with extending ▋selection');
+  C.add('Nav▲5▋' 	).val(DC.Vector('⇧,'           	)).g(' Keybind').des('move cursor ▲ 5 times with extending ▋selection');
   C.add('▋'      	).val(DC.Vector('l'            	)).g(' Keybind').des('select');
   C.add('▋∀'     	).val(DC.Vector('⇧l'           	)).g(' Keybind').des('select all');
   C.add('▋✗'     	).val(DC.Vector(';'            	)).g(' Keybind').des('(de)select toggle'); //TODO: ⎈␠ toggles, but how to deselect
