@@ -142,7 +142,7 @@ function OnCloseTab(closeTabD) { // replace todo ↓
         i90 = Math.round(0.9*ltab.length,0)
         vec_dedupe.assign(ltab,0,i90);
         vec_dedupe.unique();
-        vec_dedupe.append(ltab(1+i90,ltab.length));
+        vec_dedupe.append(ltab(Math.min(1+i90,i90),ltab.length)); // fix Subscript out of range
         ltab = vec_dedupe;}
        dbgv('Trimmed tab history')}
     L.vars.set(varNm,ltab);
