@@ -407,7 +407,7 @@ function OnUndoTabCloseUI(cmdD) {
   var sel_undo=DC.Map(); //, sel_redo=DC.Map();
   sel_undo(var_names[0]) = DC.Vector(); sel_undo(var_names[1]) = DC.Vector();
   // sel_redo(var_names[0]) = DC.Vector(); sel_redo(var_names[1]) = DC.Vector();
-  var by = sC['▼▲⋅X']
+  var by = sC['▼▲⋅X'];
   var sh = new ActiveXObject("WScript.Shell");
   var sel_script = false; // don't save selection events emitted by this script
   var undo_count=0;// uninterrupted sequence of un/re-dos should go further back; reset on re/un-do|real selchange
