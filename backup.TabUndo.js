@@ -295,7 +295,7 @@ function OnUndoTabCloseUI(cmdD) {
   var activeL  = !activeR;
   var pane_active = [activeL,activeR];
   var width_max = [sC['Max↔ 1🕐'],sC['Max↔ 2🕐']];
-  var t3A	= sC["Title 3 TabX"]                         	; //append active tab marker
+  var t3A	= sC["Title 3 TabX"]	; //append active tab marker
   var t3L	= (activeR?'':t3A);
   var t3R	= (activeR?t3A:'');
   var t12	= [sC["Title 1🕐"],sC["Title 2🔖"]]                    	; //
