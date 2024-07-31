@@ -637,11 +637,11 @@ function getHotkey(force) {
     <columns><item text="🕐"/><item text="🔖"/><item text="‹tab paths"/></columns></control>
   <control name="tab✗›" type="listview" viewmode="details" fullrow="yes"  width="234" x="0" y="56" height="56" multisel="yes" resize="yw">
     <columns><item text="🕐"/><item text="🔖"/><item text="tab› paths"/></columns></control>
-  <control                        	name="isOpen‹"	x= "50"	width="30"	y="115"	height="10"	resize="wsy"	title="‹&amp;Open"      	type="check" />
-  <control                        	name="btnU"   	x= "84"	width="32"	y="113"	height="14"	resize="wsy"	title="⎌▋ &amp;Undo Sel"	type="button"/>
-  <control                        	name="btnR"   	x="118"	width="32"	y="113"	height="14"	resize="wsy"	title="↷▋ &amp;Redo Sel"	type="button"/>
-  <control                        	name="isOpen›"	x="154"	width="30"	y="115"	height="10"	resize="wsy"	title="O&amp;pen›"      	type="check" />
-  <control close="1" default="yes"	name="btnY"   	x="188"	width="40"	y="113"	height="14"	resize="wsy"	title="✓&amp;Reopen"    	type="button"/>
-  <control close="0"              	name="btnN"   	x=  "4"	width="40"	y="113"	height="14"	resize="wsy"	title="✗&amp;Cancel"    	type="button"/>
+  <control                        	name="isOpen‹"	x= "50"	width="30"	y="115"	height="10"	resize="wsy"	title="‹&amp;Open"      	                     		type="check" />
+  <control                        	name="btnU"   	x= "84"	width="32"	y="113"	height="14"	resize="wsy"	title="⎌▋ &amp;Undo Sel"	                     	type="button"/>
+  <control                        	name="btnR"   	x="118"	width="32"	y="113"	height="14"	resize="wsy"	title="↷▋ &amp;Redo Sel"	                     	                	type="button"/>
+  <control                        	name="isOpen›"	x="154"	width="30"	y="115"	height="10"	resize="wsy"	title="O&amp;pen›"      	                     	                	type="check" />
+  <control close="1" default="yes"	name="btnY"   	x="188"	width="40"	y="113"	height="14"	resize="wsy"	title="&amp;Reopen"     	image="#undoclosetab"	imagelabel="yes"	type="button"/>
+  <control close="0"              	name="btnN"   	x=  "4"	width="40"	y="113"	height="14"	resize="wsy"	title="✗&amp;Cancel"    	                     	imagelabel="yes"	type="button"/>
 </dialog></resource>
 </resources>
