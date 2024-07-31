@@ -629,6 +629,9 @@ function getHotkey(force) {
     t.getHotkey_hk = hk;}
   return t.getHotkey_hk
 }
+  // <control                        	name="btnU"	x= "84"	width="32"	y="113"	height="14"	resize="wsy"	title="⎌▋ &amp;Undo Sel"	                 	type="button"/>
+  // <control close="1" default="yes"	name="btnY"	x="188"	width="40"	y="113"	height="14"	resize="wsy"	title="✓&amp;Reopen"    	                 	type="button"/>
+  // <control                        	name="btnU"	x= "84"	width="32"	y="113"	height="14"	resize="wsy"	title="&amp;Undo Sel"   	image="#undolist"	imagelabel="yes"	type="button"/>
 
 ==SCRIPT RESOURCES
 <resources><resource name="✗Tabs" type="dialog">
