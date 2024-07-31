@@ -9,7 +9,7 @@ function OnInit(D) {
     +""           	+ "(click ⚙ to configure)";
   D.version       	= '0.4@24-07';
   D.url           	= '';
-  D.default_enable	= true; D.min_version = '13.0'; D.copyright = "©es"; var uid = "7fb5996cdd6040b0abcb7e4c73b80261";
+  D.default_enable	= true; D.min_version = '13.7'; D.copyright = "©es"; var uid = "7fb5996cdd6040b0abcb7e4c73b80261";
 
   var sV=D.vars, sC=D.config, DC=DOpus.Create, Sys=DC.SysInfo, C=new ConfigHelper(D);
   C.add('DebugOutput'       	).val(false               	).g('  Debug').des('Enable debug output in the "Script log"');
