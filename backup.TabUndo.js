@@ -41,7 +41,7 @@ function OnInit(D) {
   C.add('Friendly::{FF}'    	).val(DC.Vector(1,"Path","🔖","No")).g('vMisc').des("For system folders with paths like '::{645FF...}' use friendly name 'Recycle Bin' in:\nPath\t replace path\n🔖\t add as a label\nNo\tno friendly names");
 
   C.add(" ⚠️").val("⇧ ⎈⌃ ⎇⌥ ◆❖⌘").g(' Keybind').des('Help: Can use ⎈ instead of Ctrl-. Only partially validated for correctness');
-  C.add('✓'      	).val(DC.Vector('r','i','Alt-O'	)).g(' Keybind').des('Reopen selected tabs');
+  C.add('✓'      	).val(DC.Vector('r','i','Alt+O'	)).g(' Keybind').des('Reopen selected tabs');
   C.add('⎋'      	).val(DC.Vector('q','c'        	)).g(' Keybind').des('Cancel');
   C.add('⎌▋'     	).val(DC.Vector('u'            	)).g(' Keybind').des('undo selection');
   C.add('↷▋'     	).val(DC.Vector('y','g'        	)).g(' Keybind').des('redo selection');
@@ -589,10 +589,10 @@ function hk_sub_symbol(hk_s) { // replaces ⇧ ⎈⌃ ⎇⌥ ◆❖⌘ symbols w
     t.reAlt  	= new RegExp('⎇|⌥'  	,"gmi");
     t.reWin  	= new RegExp('◆|❖|⌘'	,"gmi");}
   return hk_s
-    .replace(t.reShift	,'Shift-')
-    .replace(t.reCtrl 	,'Ctrl-')
-    .replace(t.reAlt  	,'Alt-')
-    .replace(t.reWin  	,'Win-');
+    .replace(t.reShift	,'Shift+')
+    .replace(t.reCtrl 	,'Ctrl+')
+    .replace(t.reAlt  	,'Alt+')
+    .replace(t.reWin  	,'Win+');
 }
 function validHK(hk_v) {
   var sV=Script.vars,sC=Script.config,DC=DOpus.Create;
