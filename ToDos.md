@@ -1,5 +1,8 @@
+# backup.TabSetSave🕘.js
+  - add global lock in case a command is invoked too fast, might corrupt saves?
 # Column.SizeFormat.js
 - ✗ can't be made performant due to JS overhead, v13's new evaluator scripts are too buggy currently, so can't replace either
+- Simplify alignment by making the column left-aligned and lef-pad all numbers with " "/" "
 - ?Add custom # of digits after decimals for various (dmThreshold)
 - ?Add from avgscript counts and make custom sub-folder/file count columns (with/without/only softlinked) with shorter names using Unicode 🗀#📁📂🗁🗄
 - ? Add a button that toggles 3 states: Size with links/without links/only links
