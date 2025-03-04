@@ -42,6 +42,7 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
   An example [Undo ✗ Tab button](<./Undo ✗ Tab.dcf>) using a few of the commands:
     - opens the GUI listview on click
     - includes a tab undo (with and without switching to the reopened tab) and a button to clear history
+- [backup.TabSetSave🕘](./backup.TabSetSave🕘.js) automatically saves opened tabs in a [Tab Group](https://docs.dopus.com/doku.php?id=reference:scripting_reference:scripting_objects:tabgroups) on a timer so that you don't lose your precious tabs even in a crash
 
 ### Columns
 - [Column.AttrShort](./Column.AttrShort.js) adds a column with short file attributes (without `-` padding), which also displays `i` indexing status for those files that have content indexing enabled (default is otherwise, files with content indexing disabled have a confusing `i` indicator)
