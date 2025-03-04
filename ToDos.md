@@ -1,3 +1,5 @@
+# backup.TabSetSave🕘.js
+  - add global lock in case a command is invoked too fast, might corrupt saves?
 # Column.SizeFormat.js
 - ✗ can't be made performant due to JS overhead, v13's new evaluator scripts are too buggy currently, so can't replace either
 - ?Add custom # of digits after decimals for various (dmThreshold)
