@@ -69,10 +69,12 @@ function OnTabGroupSave(scriptCmdData) {
     , tab 	= func.sourcetab      //
     , args	= func.args           ;
   var idx = Math.floor(sV.get('idx') % sV.get('MaxHistory' )) + 1;
-  var task_name = sV.get('PrefixFile' ) +' '+idx;
   sV.set('idx', idx);
   var tabGroups = DOpus.TabGroups;
 
+  var listers = DOpus.listers; var i=0;
+  for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
+  var task_name = 'L'+i+ sV.get('PrefixFile' ) +' '+idx;
   var tg_res;
   // if (sV.get('PrefixDir')) {dbgv("saving with PrefixDir ¦" + sV.get('PrefixDir') +"→"+ task_name +"¦");
   //   var found = false;
@@ -100,18 +102,18 @@ function OnTabGroupSave(scriptCmdData) {
     var ts = new Date();
     tg_res.desc = "backup.TabGroupSave🕘 on " + ts.toLocaleString();
     tg_res.closeexisting = sV.get('CloseOthers');
-    var lister = DOpus.listers.lastactive;
-    if (lister.dual) { tg_res.dual = true;
-      var tabList = lister.tabsleft;  var tg_tabs = tg_res.lefttabs;
+    if (L.dual) { tg_res.dual = true;
+      var tabList = L.tabsleft;  var tg_tabs = tg_res.lefttabs;
       for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
-      var tabList = lister.tabsright; var tg_tabs = tg_res.righttabs;
+      var tabList = L.tabsright; var tg_tabs = tg_res.righttabs;
       for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
     } else {
-      var tabList = lister.tabs; var tg_tabs = tg_res.tabs;
-      for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
+      var tabList = L.tabs; var tg_tabs = tg_res.tabs;
+      if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}}
     }
     tabGroups.Save();
   } else {err("Failed to create a new tab group to save tabs to " + task_name);}
+  }
 }
 
 function cfgUpdate(D) { // Read user config to update script vars or set defaults if config is blank
