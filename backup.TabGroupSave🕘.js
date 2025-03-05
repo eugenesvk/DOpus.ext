@@ -33,21 +33,14 @@ function OnInit(D) {
 }
 
 function setDefaults(D) {var sV=D.vars;
-  sV.set('Period≝'      	,10                    	 );
-  sV.set('MaxHistory≝'  	,5                     	 );
-  sV.set('PrefixDir≝'   	,'Backup'              	 );
-  sV.set('PrefixFile≝'  	,'TabGroup'            	 );
-  sV.set('CloseOthers≝' 	,true                  	 );
-  sV.set('DebugOutput≝' 	,false                 	 );
-  sV.set('DebugVerbose≝'	,false                 	 );
-  sV.set('idx'          	,0                     	 );
-  sV.set('Period'       	,sV.get('Period≝'      	));
-  sV.set('MaxHistory'   	,sV.get('MaxHistory≝'  	));
-  sV.set('PrefixDir'    	,sV.get('PrefixDir≝'   	));
-  sV.set('PrefixFile'   	,sV.get('PrefixFile≝'  	));
-  sV.set('CloseOthers'  	,sV.get('CloseOthers≝' 	));
-  sV.set('DebugOutput'  	,sV.get('DebugOutput≝' 	));
-  sV.set('DebugVerbose' 	,sV.get('DebugVerbose≝'	));
+  sV.set('Period≝'      	,10        	 );sV.set('Period'      	,sV.get('Period≝'      	));
+  sV.set('MaxHistory≝'  	,5         	 );sV.set('MaxHistory'  	,sV.get('MaxHistory≝'  	));
+  sV.set('PrefixDir≝'   	,'Backup'  	 );sV.set('PrefixDir'   	,sV.get('PrefixDir≝'   	));
+  sV.set('PrefixFile≝'  	,'TabGroup'	 );sV.set('PrefixFile'  	,sV.get('PrefixFile≝'  	));
+  sV.set('CloseOthers≝' 	,true      	 );sV.set('CloseOthers' 	,sV.get('CloseOthers≝' 	));
+  sV.set('DebugOutput≝' 	,false     	 );sV.set('DebugOutput' 	,sV.get('DebugOutput≝' 	));
+  sV.set('DebugVerbose≝'	,false     	 );sV.set('DebugVerbose'	,sV.get('DebugVerbose≝'	));
+  sV.set('idx'          	,0         	 );
 }
 
 function OnScriptConfigChange(configChangeData) { cfgUpdate(configChangeData.changed); }
