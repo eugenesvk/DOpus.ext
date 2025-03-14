@@ -76,7 +76,7 @@ function OnTabGroupSave(scriptCmdData) {
   for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
   var ts = new Date(); //Day+Mon (locale-aware) HH:MM
   var reg_repl_year = new RegExp('[\\/-]?'+ ts.getFullYear(),"gm");
-  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ ts.getHours() +':'+ ts.getMinutes();
+  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ ts.getHours() +'꞉'+ ts.getMinutes(); //: bugs
   var task_name_prefix = 'L'+i+ sV.get('PrefixFile' ) +' '+ idx;
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
