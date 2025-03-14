@@ -74,8 +74,14 @@ function OnTabGroupSave(scriptCmdData) {
 
   var listers = DOpus.listers; var i=0;
   for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
-  var task_name = 'L'+i+ sV.get('PrefixFile' ) +' '+idx;
+  var ts = new Date(); //Day+Mon (locale-aware) HH:MM
+  var reg_repl_year = new RegExp('[\\/-]?'+ ts.getFullYear(),"gm");
+  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ ts.getHours() +':'+ ts.getMinutes();
+  var task_name_prefix = 'L'+i+ sV.get('PrefixFile' ) +' '+ idx;
+  var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
+  var task_name = task_name_prefix +' '+ cur_date_time;
   var tg_res;
+  // ↓ todo: delete old task with the same prefix
   // if (sV.get('PrefixDir')) {dbgv("saving with PrefixDir ¦" + sV.get('PrefixDir') +"→"+ task_name +"¦");
   //   var found = false;
   //   for     (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg   = e.item();
@@ -94,13 +100,14 @@ function OnTabGroupSave(scriptCmdData) {
   //   }
   // } else {dbgv("saving without a prefix ¦" + task_name + "¦");
     for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
-      if (tg.name === task_name) {tabGroups.DeleteChild(tg);};}
+      if ( task_name         === tg.name
+        || task_name_pre_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);};
+    }
     tg_res = tabGroups.AddChildGroup(task_name);
   // }
 
   if (tg_res) {dbgv("filling up a new group ¦" + task_name + "¦" + " with current Lister tabs ");
-    var ts = new Date();
-    tg_res.desc = "backup.TabGroupSave🕘 on " + ts.toLocaleString();
+    tg_res.desc = "backup.TabGroupSave🕘 on " + cur_date_time;
     tg_res.closeexisting = sV.get('CloseOthers');
     if (L.dual) { tg_res.dual = true;
       var tabList = L.tabsleft;  var tg_tabs = tg_res.lefttabs;
