@@ -101,7 +101,7 @@ function OnTabGroupSave(scriptCmdData) {
   // } else {dbgv("saving without a prefix ¦" + task_name + "¦");
     for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
       if ( task_name         === tg.name
-        || task_name_pre_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);};
+        || task_name_pre_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);break;};
     }
     tg_res = tabGroups.AddChildGroup(task_name);
   // }
