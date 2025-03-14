@@ -19,7 +19,7 @@ function OnInit(D) {
     +                 	      sV.get('MaxHistory≝'  	));
   C.add('PrefixDir'   	).val(sV.get('PrefixDir≝'   	)).g('Name').des('🐞ignored due to an unknown🐞 Name of the folder to add a tab group to. ≝'
     +                 	      sV.get('PrefixDir≝'   	));
-  C.add('PrefixFile'  	).val(sV.get('PrefixFile≝'  	)).g('Name').des('Name of the saved tab group name, an time-based index will be appended to this (up to MaxHistory). ≝'
+  C.add('PrefixFile'  	).val(sV.get('PrefixFile≝'  	)).g('Name').des("Saved tab group name (with a time-based #index appended up to MaxHistory).\n⚠ Deletes tab groups starting with 'PrefixFile #', so don't pick a name you use in other groups.\nIllegal file name symbols: *:\"\\|<>/?^ ≝"
     +                 	      sV.get('PrefixFile≝'  	));
   C.add('CloseOthers' 	).val(sV.get('CloseOthers≝' 	)).g(' Misc').des('Set "Close all other tabs" option. ≝'
     +                 	      sV.get('CloseOthers≝' 	));
@@ -76,7 +76,9 @@ function OnTabGroupSave(scriptCmdData) {
   for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
   var ts = new Date(); //Day+Mon (locale-aware) HH:MM
   var reg_repl_year = new RegExp('[\\/-]?'+ ts.getFullYear(),"gm");
-  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ ts.getHours() +'꞉'+ ts.getMinutes(); //: bugs
+  var hh = ts.getHours  (); if (hh.length == 1) {hh = " "+hh}
+  var mm = ts.getMinutes(); if (mm.length == 1) {mm = " "+mm}
+  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
   var task_name_prefix = 'L'+i+ sV.get('PrefixFile' ) +' '+ idx;
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
