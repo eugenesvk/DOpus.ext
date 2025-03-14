@@ -7,7 +7,7 @@ function OnInit(D) {
   D.name          	= "backup.TabGroupSave🕘";
   D.desc          	= "Periodically save active set of tabs in a tab group to avoid data loss" + "\n"
     +""           	+ "(click ⚙ to configure)";
-  D.version       	= "0.2@25-03";
+  D.version       	= "0.3@25-03";
   D.url           	= "";
   D.default_enable	= true; D.min_version = "12.5"; D.copyright = "es";
 
