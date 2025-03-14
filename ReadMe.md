@@ -42,7 +42,7 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
   An example [Undo ✗ Tab button](<./Undo ✗ Tab.dcf>) using a few of the commands:
     - opens the GUI listview on click
     - includes a tab undo (with and without switching to the reopened tab) and a button to clear history
-- [backup.TabSetSave🕘](./backup.TabSetSave🕘.js) automatically saves opened tabs in a [Tab Group](https://docs.dopus.com/doku.php?id=basic_concepts:the_lister:tabs:tab_groups) on a timer so that you don't lose your precious tabs even in a crash
+- [backup.TabGroupSave🕘](./backup.TabGroupSave🕘.js) automatically saves opened tabs in a [Tab Group](https://docs.dopus.com/doku.php?id=basic_concepts:the_lister:tabs:tab_groups) on a timer so that you don't lose your precious tabs even in a crash. ⚠ deletes old tab groups starting with user defined prefix + index, so it's important to pick a prefix not used in other tab groups to avoid them being deleted.
 
 ### Columns
 - [Column.AttrShort](./Column.AttrShort.js) adds a column with short file attributes (without `-` padding), which also displays `i` indexing status for those files that have content indexing enabled (default is otherwise, files with content indexing disabled have a confusing `i` indicator)
@@ -59,6 +59,6 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
     - JumpItemCursor↕ is fluid, but on key release continues to execute for a few iterations
     - JumpItem↕ skips some executions; stops faster vs↑, but also not immediately
 - [Cmd.TabDedupe](Cmd.TabDedupe) `TabDedupe dual noprotect` then `Go CURRENT NEWTAB` opens a new tab at the end of the tabbar insted of next to the last tab even though it's visibly selected
-- [backup.TabSetSave🕘](./backup.TabSetSave🕘.js) can't create tab groups in a folder for some unknown reason, so they they "pollute" the general list instead
+- [backup.TabGroupSave🕘](./backup.TabGroupSave🕘.js) can't create tab groups in a folder for some unknown reason, so they they "pollute" the general list instead
 
 ## Credits
