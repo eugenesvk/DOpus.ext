@@ -8,7 +8,7 @@ function OnInitIncludeFile(D) { // Called by Directory Opus to initialize the in
 }
 
 function ConfigHelper(data) { //v2.0@24-04-04
-  var t=this; t.data=data; t.cfg=data.config; t.cd=DOpus.Create.Map(); t.cg=DOpus.Create.Map();
+  var t=this; t.data=data; t.cfg=data.config; t.cd=DOpus.Create.OrderedMap(); t.cg=DOpus.Create.OrderedMap();
   t.add = function(name,val,des) { // add config item
     t.l = {orig : name, lower : name.toLowerCase()};
     return t.val(val).des(des);}
