@@ -13,20 +13,13 @@ function OnInit(D) {
 
   setDefaults(D)
   var sV=D.vars, sC=D.config, DC=DOpus.Create, Sys=DC.SysInfo, C=new ConfigHelper(D);
-  C.add('Period'      	).val(sV.get('Period≝'      	)).g(' Time').des("Save all tabs once per this many minutes. ≝"
-    +                 	      sV.get('Period≝'      	));
-  C.add('MaxHistory'  	).val(sV.get('MaxHistory≝'  	)).g(' History').des("Save up to this many versions, each newer one has its index +1 incremented until MaxHistory, then starts from the beginning. ≝"
-    +                 	      sV.get('MaxHistory≝'  	));
-  C.add('PrefixDir'   	).val(sV.get('PrefixDir≝'   	)).g('Name').des('🐞ignored due to an unknown🐞 Name of the folder to add a tab group to. ≝'
-    +                 	      sV.get('PrefixDir≝'   	));
-  C.add('PrefixFile'  	).val(sV.get('PrefixFile≝'  	)).g('Name').des("Saved tab group name (with a time-based #index appended up to MaxHistory).\n⚠ Deletes tab groups starting with 'PrefixFile #', so don't pick a name you use in other groups.\nIllegal file name symbols: *:\"\\|<>/?^ ≝"
-    +                 	      sV.get('PrefixFile≝'  	));
-  C.add('CloseOthers' 	).val(sV.get('CloseOthers≝' 	)).g(' Misc').des('Set "Close all other tabs" option. ≝'
-    +                 	      sV.get('CloseOthers≝' 	));
-  C.add('DebugOutput' 	).val(sV.get('DebugOutput≝' 	)).g('  Debug').des('Enable debug output in the "Script log". ≝'
-    +                 	      sV.get('DebugOutput≝' 	));
-  C.add('DebugVerbose'	).val(sV.get('DebugVerbose≝'	)).g('  Debug').des('More verbose debug in the "Script log". ≝'
-    +                 	      sV.get('DebugVerbose≝'	));
+  var k='Period'      ;var v=sV.get(k+'≝');C.add(k).val(v).g(' Time'   ).des('Save all tabs once per this many minutes. ≝'+v);
+  var k='MaxHistory'  ;var v=sV.get(k+'≝');C.add(k).val(v).g(' History').des('Save up to this many versions, each newer one has its index +1 incremented until MaxHistory, then starts from the beginning. ≝'+v);
+  var k='PrefixDir'   ;var v=sV.get(k+'≝');C.add(k).val(v).g('Name'    ).des('🐞ignored due to an unknown🐞 Name of the folder to add a tab group to. ≝'+v);
+  var k='PrefixFile'  ;var v=sV.get(k+'≝');C.add(k).val(v).g('Name'    ).des("Saved tab group name (with a time-based #index appended up to MaxHistory).\n⚠ Deletes tab groups starting with 'PrefixFile #', so don't pick a name you use in other groups.\nIllegal file name symbols: *:\"\\|<>/?^ ≝"+v);
+  var k='CloseOthers' ;var v=sV.get(k+'≝');C.add(k).val(v).g(' Misc'   ).des('Set "Close all other tabs" option. ≝'+v);
+  var k='DebugOutput' ;var v=sV.get(k+'≝');C.add(k).val(v).g('  Debug' ).des('Enable debug output in the "Script log". ≝'+v);
+  var k='DebugVerbose';var v=sV.get(k+'≝');C.add(k).val(v).g('  Debug' ).des('More verbose debug in the "Script log". ≝'+v);
 
   DOpus.KillTimer(345);
   DOpus.SetTimer (345, sV.get('Period') * 60 * 1000);
