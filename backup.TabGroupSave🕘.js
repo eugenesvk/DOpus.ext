@@ -61,8 +61,8 @@ function OnTabGroupSave(scriptCmdData) {
     , cmd 	= func.command        // pre-filled Command object that can be used to run commands against the source and destination tabs. =DOpusFactory.Command and setting the source and destination tabs manually
     , tab 	= func.sourcetab      //
     , args	= func.args           ;
-  var idx = Math.floor(sV.get('idx') % sV.get('MaxHistory' )) + 1;
-  var pre_idx = ''; if (sV.get('MaxHistory') > 9) {pre_idx=' '};
+  var idx = Math.floor(sV.get('idx') % sC.MaxHistory) + 1;
+  var pre_idx = ''; if (sC.MaxHistory > 9 && idx < 10) {pre_idx=' '};
   sV.set('idx', idx);
   var tabGroups = DOpus.TabGroups;
 
@@ -73,26 +73,26 @@ function OnTabGroupSave(scriptCmdData) {
   var hh = ts.getHours  (); if (hh.length == 1) {hh = " "+hh}
   var mm = ts.getMinutes(); if (mm.length == 1) {mm = " "+mm}
   var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
-  var task_name_prefix = 'L'+i+ sV.get('PrefixFile' ) +' '+ pre_idx + idx;
+  var task_name_prefix = 'L'+i+ sC.PrefixFile +' '+ pre_idx + idx;
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
   var tg_res;
   // ↓ todo: delete old task with the same prefix
-  // if (sV.get('PrefixDir')) {dbgv("saving with PrefixDir ¦" + sV.get('PrefixDir') +"→"+ task_name +"¦");
+  // if (sC.PrefixDir) {dbgv("saving with PrefixDir ¦" + sC.PrefixDir +"→"+ task_name +"¦");
   //   var found = false;
   //   for     (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg   = e.item();
-  //     if ((tg.folder) && (tg.name === sV.get('PrefixDir'))) {found = true; dbgv("folder = " + tg.name);
+  //     if ((tg.folder) && (tg.name === sC.PrefixDir)) {found = true; dbgv("folder = " + tg.name);
   //       for (var e = new Enumerator(tg       ); !e.atEnd(); e.moveNext()) {var tgin = e.item();
   //         if (tgin.name === task_name) {tg.DeleteChild(tgin);dbgv("Deleted existing tab group")};}
   //       tg_res = tg.AddChildGroup(task_name);
   //       dbgv("Adding a new tab group" +task_name+"	"+tg.folder+" "+ tg_res);tabGroups.Save();
   //     };
   //   }
-  //   if (!found) {dbgv("No dir PrefixDir found, creating a new one: " + sV.get('PrefixDir'));
-  //     var tg_dir_res = tabGroups.AddChildFolder(sV.get('PrefixDir'));
+  //   if (!found) {dbgv("No dir PrefixDir found, creating a new one: " + sC.PrefixDir);
+  //     var tg_dir_res = tabGroups.AddChildFolder(sC.PrefixDir);
   //     if (tg_dir_res)	{tg_res = tg_dir_res.AddChildGroup(task_name); dbgv("tg_res child =" + tg_res)
   //     } else         	{tg_res = tabGroups .AddChildGroup(task_name); dbgv("tg_res nopar =" + tg_res)
-  //       err("Failed to create a tab group dir ¦" + sV.get('PrefixDir') + "¦, will be saving without one...");}
+  //       err("Failed to create a tab group dir ¦" + sC.PrefixDir + "¦, will be saving without one...");}
   //   }
   // } else {dbgv("saving without a prefix ¦" + task_name + "¦");
     for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
@@ -104,7 +104,7 @@ function OnTabGroupSave(scriptCmdData) {
 
   if (tg_res) {dbgv("filling up a new group ¦" + task_name + "¦" + " with current Lister tabs ");
     tg_res.desc = "backup.TabGroupSave🕘 on " + cur_date_time;
-    tg_res.closeexisting = sV.get('CloseOthers');
+    tg_res.closeexisting = sC.CloseOthers;
     if (L.dual) { tg_res.dual = true;
       var tabList = L.tabsleft;  var tg_tabs = tg_res.lefttabs;
       for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
@@ -127,7 +127,7 @@ function cfgUpdate(D) { // Read user config to update script vars or set default
   for (var e = new Enumerator(D); !e.atEnd(); e.moveNext()) {var cfgv = e.item();
     if (cfgv === 'Period' && sC[cfgv] != sV.get(cfgv)) { dbgv("Updating 🕘timer period")
       DOpus.KillTimer(345);
-      DOpus.SetTimer (345, sV.get('Period') * 60 * 1000);
+      DOpus.SetTimer (345, sC.Period * 60 * 1000);
     }
     if ({}.hasOwnProperty.call(sC,cfgv)) { //Object.prototype.hasOwnProperty; 'y' in x checks inherited; sC.hasOwnProperty fails
       dbg_out += " " + cfgv + "=¦" + sC[cfgv] +"¦ ← ¦"+ sV.get(cfgv) +"¦ ≝¦"+ sV.get(cfgv+"≝") +"¦";
