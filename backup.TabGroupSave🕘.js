@@ -70,8 +70,8 @@ function OnTabGroupSave(scriptCmdData) {
   for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
   var ts = new Date(); //Day+Mon (locale-aware) HH:MM
   var reg_repl_year = new RegExp('[\\/-]?'+ ts.getFullYear(),"gm");
-  var hh = ts.getHours  (); if (hh.length == 1) {hh = " "+hh}
-  var mm = ts.getMinutes(); if (mm.length == 1) {mm = " "+mm}
+  var hh = ts.getHours  (); if (hh < 10) {hh = " "+hh}
+  var mm = ts.getMinutes(); if (mm < 10) {mm = " "+mm}
   var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
   var task_name_prefix = 'L'+i+ sC.PrefixFile +' '+ pre_idx + idx;
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
