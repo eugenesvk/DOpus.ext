@@ -15,7 +15,7 @@ function OnInit(D) {
   var sV=D.vars, sC=D.config, DC=DOpus.Create, Sys=DC.SysInfo, C=new ConfigHelper(D);
   C.add('Period'      	).val(sV.get('Period≝'      	)).g(' Time').des("Save all tabs once per this many minutes. ≝"
     +                 	      sV.get('Period≝'      	));
-  C.add('MaxHistory'  	).val(sV.get('MaxHistory≝'  	)).g(' History').des("Save up to this many versions, each newer one has its index +1 incremented untill MaxHistory, then starts from the beginning. ≝"
+  C.add('MaxHistory'  	).val(sV.get('MaxHistory≝'  	)).g(' History').des("Save up to this many versions, each newer one has its index +1 incremented until MaxHistory, then starts from the beginning. ≝"
     +                 	      sV.get('MaxHistory≝'  	));
   C.add('PrefixDir'   	).val(sV.get('PrefixDir≝'   	)).g('Name').des('🐞ignored due to an unknown🐞 Name of the folder to add a tab group to. ≝'
     +                 	      sV.get('PrefixDir≝'   	));
