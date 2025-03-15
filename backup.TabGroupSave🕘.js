@@ -69,6 +69,7 @@ function OnTabGroupSave(scriptCmdData) {
     , tab 	= func.sourcetab      //
     , args	= func.args           ;
   var idx = Math.floor(sV.get('idx') % sV.get('MaxHistory' )) + 1;
+  var pre_idx = ''; if (sV.get('MaxHistory') > 9) {pre_idx=' '};
   sV.set('idx', idx);
   var tabGroups = DOpus.TabGroups;
 
@@ -79,7 +80,7 @@ function OnTabGroupSave(scriptCmdData) {
   var hh = ts.getHours  (); if (hh.length == 1) {hh = " "+hh}
   var mm = ts.getMinutes(); if (mm.length == 1) {mm = " "+mm}
   var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
-  var task_name_prefix = 'L'+i+ sV.get('PrefixFile' ) +' '+ idx;
+  var task_name_prefix = 'L'+i+ sV.get('PrefixFile' ) +' '+ pre_idx + idx;
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
   var tg_res;
