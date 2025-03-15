@@ -74,7 +74,9 @@ function OnTabGroupSave(scriptCmdData) {
   var mm = ts.getMinutes(); if (mm < 10) {mm = " "+mm}
   var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
   var task_name_prefix = 'L'+i+ sC.PrefixFile +' '+ pre_idx + idx;
+  var task_name_pre_no = 'L'+i+ sC.PrefixFile +' '+           idx; // delete old tasks when user had <10 max
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
+  var task_name_pno_re = new RegExp(task_name_pre_no +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
   var tg_res;
   // ↓ todo: delete old task with the same prefix
@@ -97,7 +99,8 @@ function OnTabGroupSave(scriptCmdData) {
   // } else {dbgv("saving without a prefix ¦" + task_name + "¦");
     for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
       if ( task_name         === tg.name
-        || task_name_pre_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);break;};
+        || task_name_pre_re.test(tg.name)
+        || task_name_pno_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);break;};
     }
     tg_res = tabGroups.AddChildGroup(task_name);
   // }
