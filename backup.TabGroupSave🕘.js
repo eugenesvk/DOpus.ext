@@ -133,7 +133,7 @@ function cfgUpdate(D) { // Read user config to update script vars or set default
       DOpus.SetTimer (345, sC.Period * 60 * 1000);
     }
     if ({}.hasOwnProperty.call(sC,cfgv)) { //Object.prototype.hasOwnProperty; 'y' in x checks inherited; sC.hasOwnProperty fails
-      dbg_out += " " + cfgv + "=¦" + sC[cfgv] +"¦ ← ¦"+ sV.get(cfgv) +"¦ ≝¦"+ sV.get(cfgv+"≝") +"¦";
+      dbg_out += " " + cfgv + "=¦" + sC[cfgv] +"¦ ← ¦"+ sV.get(cfgv) +"¦ ≝¦"+ sV.get(cfgv) +"¦";
       sV.set(cfgv, sC[cfgv]);
     }
   }
