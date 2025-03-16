@@ -36,6 +36,62 @@ function setDefaults(D) {var sV=D.vars;
   sV.set('idx'         	,0         	 );
 }
 
+function OnStartup (D) { //StartupData no props docs.dopus.com/doku.php?id=reference:scripting_reference:scripting_objects:startupdata
+  var sV=Script.vars, sC=Script.config, DC=DOpus.Create;
+  var min_found = 1; // find at least this many "Empty Tab"s before triggering a restore
+  if (findTabEmpty(min_found)) {
+    if (min_found>1) {var mult = "s"} else {var mult = ""};
+    dbg("⚠ Found ≥" +min_found+ " 'Empty Tab'" +mult+ ", restoring tabs from backup!")
+
+    // backup current tabs before restoring just in case
+    var tabGroups = DOpus.TabGroups;
+    var listers = DOpus.listers; var i=0;
+    var ts = new Date(); //Day+Mon (locale-aware) HH:MM
+    var reg_repl_year = new RegExp('[\\/-]?'+ ts.getFullYear(),"gm");
+    var hh = ts.getHours  (); if (hh < 10) {hh = " "+hh}
+    var mm = ts.getMinutes(); if (mm < 10) {mm = " "+mm}
+    var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
+    for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
+      var task_name_prefix = 'L'+i+ sC.PrefixFile +' 0Startup';
+      var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
+      var task_name = task_name_prefix +' '+ cur_date_time;
+      var tabGroups = DOpus.TabGroups;
+      var tg_res;
+      for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
+        if ( task_name         === tg.name
+          || task_name_pre_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);break;};
+      }
+      tg_res = tabGroups.AddChildGroup(task_name);
+      if (tg_res) {dbgv("filling up a new group ¦" + task_name + "¦" + " with current Lister tabs ");
+        tg_res.desc = "backup.TabGroupSave🕘 on " + cur_date_time;
+        tg_res.closeexisting = sC.CloseOthers;
+        if (L.dual) { tg_res.dual = true;
+          var tabList = L.tabsleft;  var tg_tabs = tg_res.lefttabs;
+          for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
+          var tabList = L.tabsright; var tg_tabs = tg_res.righttabs;
+          for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
+        } else {
+          var tabList = L.tabs; var tg_tabs = tg_res.tabs;
+          if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}}
+        }
+        tabGroups.Save();
+      } else {err("Failed to create a new tab group to save tabs to " + task_name);}
+    }
+    // find the latest group to restore from (only 1 lister is supported now)
+    var i = 1; // use the first lister. TODO: restore all listers?
+    var task_name_prefix = 'L'+i+ sC.PrefixFile +' 0Startup';
+    var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
+    for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
+      if (task_name_pre_re.test(tg.name)) {
+        var cmd = DOpus.Create.Command();
+        cmd.AddLine('GO TABGROUPLOAD "' + tg.name + '" TABCLOSEALL=yes');
+        var r = cmd.Run(); dbgv("Restoring tab group ‘" + tg.name + "’ status = " + r);
+        cmd.Clear(); break;
+      };
+    }
+  }
+}
+
 function findTabEmpty(min_found) {
   var sV=Script.vars, sC=Script.config, DC=DOpus.Create;
   var listers = DOpus.listers; var i=0;
