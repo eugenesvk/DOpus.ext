@@ -36,6 +36,23 @@ function setDefaults(D) {var sV=D.vars;
   sV.set('idx'         	,0         	 );
 }
 
+function findTabEmpty(min_found) {
+  var sV=Script.vars, sC=Script.config, DC=DOpus.Create;
+  var listers = DOpus.listers; var i=0;
+  var found = 0
+  for   (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
+    for (var lr=0;lr<2;lr++) { var tabs = (lr==0) ? L.tabsright : L.tabsleft;
+      for (var i=0;i<tabs.count;i++) { // no length for a generic collection
+        dbg("tabs[i].path = " + tabs[i].path);
+        if ((tabs[i].path+"") == "Empty Tab"); {
+          found += 1; if (found >= min_found) {return true}
+        }
+      }
+    }
+  }
+  if (found >=min_found) {return true}else{return false}
+}
+
 function OnScriptConfigChange(configChangeData) { cfgUpdate(configChangeData.changed); }
 
 function OnPeriodicTimer(D) { dbgv('OnPeriodicTimer #' + D.id); //PeriodicTimerData
