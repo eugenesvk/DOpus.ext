@@ -149,7 +149,7 @@ function OnTabGroupSave(scriptCmdData) {
       if ((tg.folder) && (tg.name === PrefixDir)) {found = true; dbgv("∃ folder = " + tg.name);
         tabGroupsDir = tg;};    }
     if (!found) {dbgv("∄ PrefixDir, creating a new one = " + PrefixDir);
-      var tg_dir_res = tabGroups.AddChildFolder(PrefixDir); tabGroups.Save();
+      var tg_dir_res = tabGroups.AddChildFolder(PrefixDir);
       if (tg_dir_res)	{tabGroupsDir = tg_dir_res;
       } else         	{tabGroupsDir = tabGroups ; err("Failed to create a tab group dir ¦" + PrefixDir + "¦, will be saving without one...");}
     }
@@ -180,7 +180,7 @@ function OnTabGroupSave(scriptCmdData) {
       if ((tg.folder) && (tg.name === PrefixDirL)) {found = true; dbgv("∃ Lister folder = " + tg.name);
         tabGroupsDirL = tg;};    }
     if (!found) {dbgv("∄ PrefixDirL, creating a new one = " + PrefixDirL);
-      var tg_dir_res = tabGroupsDir.AddChildFolder(PrefixDirL); tabGroups.Save();
+      var tg_dir_res = tabGroupsDir.AddChildFolder(PrefixDirL);
       if (tg_dir_res)	{tabGroupsDirL = tg_dir_res  ;
       } else         	{tabGroupsDirL = tabGroupsDir; err("Failed to create a tab group dir ¦" + PrefixDirL + "¦, will be saving without one...");}
     }
@@ -213,8 +213,8 @@ function OnTabGroupSave(scriptCmdData) {
       var tabList = L.tabs; var tg_tabs = tg_res.tabs; var tg0_tabs = tg_res.tabs;
       if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}}
     }
-    tabGroups.Save();
   } else {err("Failed to create a new tab group to save tabs to " + task_name + " and " + task_name_0);}
+  tabGroups.Save();
   }
 }
 
