@@ -162,14 +162,15 @@ function OnTabGroupSave(scriptCmdData) {
   var hh = ts.getHours  (); if (hh < 10) {hh = " "+hh}
   var mm = ts.getMinutes(); if (mm < 10) {mm = " "+mm}
   var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') + hh +'꞉'+ mm; //: bugs since these are saved as files
-  var task_name_prefix = sC.PrefixFile +' '+ pre_idx + idx;
-  var task_name_pre_no = sC.PrefixFile +' '+           idx; // delete old tasks when user had <10 max
-  var task_name_pre_0  = sC.PrefixFile +' 00Latest';
+  var LPre = ""; if (!sC.PrefixDirL) {LPre = "L"+i};
+  var task_name_prefix = LPre + sC.PrefixFile +' '+ pre_idx + idx;
+  var task_name_pre_no = LPre + sC.PrefixFile +' '+           idx; // delete old tasks when user had <10 max
+  var task_name_pre_0  = LPre + sC.PrefixFile +' 00Latest';
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name_pno_re = new RegExp(task_name_pre_no +'.*',"gm");
   var task_name_p0_re  = new RegExp(task_name_pre_0  +'.*',"gm");
-  var task_name = task_name_prefix +' '+ cur_date_time;
-  var task_name_0 = task_name_pre_0 +' '+ cur_date_time;
+  var task_name   = task_name_prefix +' '+ cur_date_time;
+  var task_name_0 = task_name_pre_0  +' '+ cur_date_time;
   var tg_res; var tg0;
   // Create Lister subdirs
   var tabGroupsDirL;
