@@ -148,10 +148,13 @@ function OnTabGroupSave(scriptCmdData) {
   var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
   var task_name_prefix = 'L'+i+ sC.PrefixFile +' '+ pre_idx + idx;
   var task_name_pre_no = 'L'+i+ sC.PrefixFile +' '+           idx; // delete old tasks when user had <10 max
+  var task_name_pre_0  = 'L'+i+ sC.PrefixFile +' 00Latest';
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name_pno_re = new RegExp(task_name_pre_no +'.*',"gm");
+  var task_name_p0_re  = new RegExp(task_name_pre_0  +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
-  var tg_res;
+  var task_name_0 = task_name_pre_0 +' '+ cur_date_time;
+  var tg_res; var tg0;
   // ↓ todo: delete old task with the same prefix
   // if (sC.PrefixDir) {dbgv("saving with PrefixDir ¦" + sC.PrefixDir +"→"+ task_name +"¦");
   //   var found = false;
@@ -170,25 +173,32 @@ function OnTabGroupSave(scriptCmdData) {
   //       err("Failed to create a tab group dir ¦" + sC.PrefixDir + "¦, will be saving without one...");}
   //   }
   // } else {dbgv("saving without a prefix ¦" + task_name + "¦");
+    var c_del = 0; var del_max = 2; // delete at most 2 groups: latest and old under the same idx
     for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
       if ( task_name         === tg.name
         || task_name_pre_re.test(tg.name)
-        || task_name_pno_re.test(tg.name)) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);break;};
+        || task_name_pno_re.test(tg.name)
+        || task_name_p0_re .test(tg.name)
+        ) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);
+          c_del+=1; if (c_del >= del_max) {break;}};
     }
-    tg_res = tabGroups.AddChildGroup(task_name);
+    tg_res = tabGroups.AddChildGroup(task_name  );
+    tg0    = tabGroups.AddChildGroup(task_name_0);
   // }
 
-  if (tg_res) {dbgv("filling up a new group ¦" + task_name + "¦" + " with current Lister tabs ");
+  if (tg_res && tg0) {dbgv("filling up new groups ¦" + task_name + "¦" + " and ¦"+ task_name_0 +"¦ with current Lister tabs ");
     tg_res.desc = "backup.TabGroupSave🕘 on " + cur_date_time;
+    tg0   .desc = "backup.TabGroupSave🕘 on " + cur_date_time;
     tg_res.closeexisting = sC.CloseOthers;
-    if (L.dual) { tg_res.dual = true;
-      var tabList = L.tabsleft;  var tg_tabs = tg_res.lefttabs;
-      for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
-      var tabList = L.tabsright; var tg_tabs = tg_res.righttabs;
-      for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}
+    tg0   .closeexisting = sC.CloseOthers;
+    if (L.dual) { tg_res.dual = true; tg0.dual = true;
+      var tabList = L.tabsleft ; var tg_tabs = tg_res.lefttabs ; var tg0_tabs = tg_res.lefttabs ;
+      for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}
+      var tabList = L.tabsright; var tg_tabs = tg_res.righttabs; var tg0_tabs = tg_res.righttabs;
+      for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}
     } else {
-      var tabList = L.tabs; var tg_tabs = tg_res.tabs;
-      if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path);}}
+      var tabList = L.tabs; var tg_tabs = tg_res.tabs; var tg0_tabs = tg_res.tabs;
+      if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}}
     }
     tabGroups.Save();
   } else {err("Failed to create a new tab group to save tabs to " + task_name);}
