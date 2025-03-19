@@ -135,7 +135,7 @@ function OnTabGroupSave(scriptCmdData) {
     , tab 	= func.sourcetab      //
     , args	= func.args           ;
   var idx = Math.floor(sV.get('idx') % sC.MaxHistory) + 1;
-  var pre_idx = ''; if (sC.MaxHistory > 9 && idx < 10) {pre_idx=' '};
+  var pre_idx = ''; if (sC.MaxHistory > 9 && idx < 10) {pre_idx='0'}; //' ' fails, '10' is still sorted before ' 1'
   sV.set('idx', idx);
   var tabGroups = DOpus.TabGroups;
 
