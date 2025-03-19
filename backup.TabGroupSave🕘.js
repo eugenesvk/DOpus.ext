@@ -16,6 +16,7 @@ function OnInit(D) {
   var k='Period'      ;var v=sV.get(k);C.add(k).val(v).g(' Time'   ).des('Save all tabs once per this many minutes. ≝'+v);
   var k='MaxHistory'  ;var v=sV.get(k);C.add(k).val(v).g(' History').des('Save up to this many versions, each newer one has its index +1 incremented until MaxHistory, then starts from the beginning. ≝'+v);
   var k='PrefixDir'   ;var v=sV.get(k);C.add(k).val(v).g('Name'    ).des('Name of the folder to add a tab group to\n⚠Invalid symbols *:\"\\|<>/?^\n≝'+v);
+  var k='PrefixDirL'  ;var v=sV.get(k);C.add(k).val(v).g('Name'    ).des('Name of the Lister sub-folder to add a tab group to\n⚠Invalid symbols *:\"\\|<>/?^\n≝'+v);
   var k='PrefixFile'  ;var v=sV.get(k);C.add(k).val(v).g('Name'    ).des("Saved tab group name (with a time-based #index appended up to MaxHistory).\n⚠Deletes tab groups starting with 'PrefixFile #', so don't pick a name you use in other groups.\n⚠Invalid symbols *:\"\\|<>/?^\n≝"+v);
   var k='CloseOthers' ;var v=sV.get(k);C.add(k).val(v).g(' Misc'   ).des('Set "Close all other tabs" option. ≝'+v);
   var k='DebugOutput' ;var v=sV.get(k);C.add(k).val(v).g('  Debug' ).des('Enable debug output in the "Script log". ≝'+v);
@@ -29,6 +30,7 @@ function setDefaults(D) {var sV=D.vars;
   sV.set('Period'      	,10        	 );
   sV.set('MaxHistory'  	,5         	 );
   sV.set('PrefixDir'   	,'Backup'  	 );
+  sV.set('PrefixDirL'  	,'Lister #'	 );
   sV.set('PrefixFile'  	,'TabGroup'	 );
   sV.set('CloseOthers' 	,true      	 );
   sV.set('DebugOutput' 	,false     	 );
