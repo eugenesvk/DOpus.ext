@@ -153,7 +153,7 @@ function OnTabGroupSave(scriptCmdData) {
       if (tg_dir_res)	{tabGroupsDir = tg_dir_res;
       } else         	{tabGroupsDir = tabGroups ; err("Failed to create a tab group dir ¦" + PrefixDir + "¦, will be saving without one...");}
     }
-  }
+  }     else          {tabGroupsDir = tabGroups}
 
   var listers = DOpus.listers; var i=0;
   for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
@@ -185,7 +185,7 @@ function OnTabGroupSave(scriptCmdData) {
       if (tg_dir_res)	{tabGroupsDirL = tg_dir_res  ;
       } else         	{tabGroupsDirL = tabGroupsDir; err("Failed to create a tab group dir ¦" + PrefixDirL + "¦, will be saving without one...");}
     }
-  }
+  }     else          {tabGroupsDirL = tabGroupsDir}
 
   // Save tabs in a tab group
   var c_del = 0; var del_max = 2; // delete at most 2 groups: latest and old under the same idx
