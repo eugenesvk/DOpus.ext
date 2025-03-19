@@ -138,6 +138,20 @@ function OnTabGroupSave(scriptCmdData) {
   var pre_idx = ''; if (sC.MaxHistory > 9 && idx < 10) {pre_idx='0'}; //' ' fails, '10' is still sorted before ' 1'
   sV.set('idx', idx);
   var tabGroups = DOpus.TabGroups;
+  var tabGroupsDir;
+  // Create subdirs if configured
+  var PrefixDir = sC.PrefixDir
+  if (sC.PrefixDir) {dbgv("saving in PrefixDir ¦" + PrefixDir +"¦");
+    var found = false;
+    for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg   = e.item();
+      if ((tg.folder) && (tg.name === PrefixDir)) {found = true; dbgv("∃ folder = " + tg.name);
+        tabGroupsDir = tg;};    }
+    if (!found) {dbgv("∄ PrefixDir, creating a new one = " + PrefixDir);
+      var tg_dir_res = tabGroups.AddChildFolder(PrefixDir); tabGroups.Save();
+      if (tg_dir_res)	{tabGroupsDir = tg_dir_res;
+      } else         	{tabGroupsDir = tabGroups ; err("Failed to create a tab group dir ¦" + PrefixDir + "¦, will be saving without one...");}
+    }
+  }
 
   var listers = DOpus.listers; var i=0;
   for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
@@ -145,46 +159,43 @@ function OnTabGroupSave(scriptCmdData) {
   var reg_repl_year = new RegExp('[\\/-]?'+ ts.getFullYear(),"gm");
   var hh = ts.getHours  (); if (hh < 10) {hh = " "+hh}
   var mm = ts.getMinutes(); if (mm < 10) {mm = " "+mm}
-  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') +' '+ hh +'꞉'+ mm; //: bugs since these are saved as files
-  var task_name_prefix = 'L'+i+ sC.PrefixFile +' '+ pre_idx + idx;
-  var task_name_pre_no = 'L'+i+ sC.PrefixFile +' '+           idx; // delete old tasks when user had <10 max
-  var task_name_pre_0  = 'L'+i+ sC.PrefixFile +' 00Latest';
+  var cur_date_time = ts.toLocaleDateString().replace(reg_repl_year,'') + hh +'꞉'+ mm; //: bugs since these are saved as files
+  var task_name_prefix = sC.PrefixFile +' '+ pre_idx + idx;
+  var task_name_pre_no = sC.PrefixFile +' '+           idx; // delete old tasks when user had <10 max
+  var task_name_pre_0  = sC.PrefixFile +' 00Latest';
   var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
   var task_name_pno_re = new RegExp(task_name_pre_no +'.*',"gm");
   var task_name_p0_re  = new RegExp(task_name_pre_0  +'.*',"gm");
   var task_name = task_name_prefix +' '+ cur_date_time;
   var task_name_0 = task_name_pre_0 +' '+ cur_date_time;
   var tg_res; var tg0;
-  // ↓ todo: delete old task with the same prefix
-  // if (sC.PrefixDir) {dbgv("saving with PrefixDir ¦" + sC.PrefixDir +"→"+ task_name +"¦");
-  //   var found = false;
-  //   for     (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg   = e.item();
-  //     if ((tg.folder) && (tg.name === sC.PrefixDir)) {found = true; dbgv("folder = " + tg.name);
-  //       for (var e = new Enumerator(tg       ); !e.atEnd(); e.moveNext()) {var tgin = e.item();
-  //         if (tgin.name === task_name) {tg.DeleteChild(tgin);dbgv("Deleted existing tab group")};}
-  //       tg_res = tg.AddChildGroup(task_name);
-  //       dbgv("Adding a new tab group" +task_name+"	"+tg.folder+" "+ tg_res);tabGroups.Save();
-  //     };
-  //   }
-  //   if (!found) {dbgv("No dir PrefixDir found, creating a new one: " + sC.PrefixDir);
-  //     var tg_dir_res = tabGroups.AddChildFolder(sC.PrefixDir);
-  //     if (tg_dir_res)	{tg_res = tg_dir_res.AddChildGroup(task_name); dbgv("tg_res child =" + tg_res)
-  //     } else         	{tg_res = tabGroups .AddChildGroup(task_name); dbgv("tg_res nopar =" + tg_res)
-  //       err("Failed to create a tab group dir ¦" + sC.PrefixDir + "¦, will be saving without one...");}
-  //   }
-  // } else {dbgv("saving without a prefix ¦" + task_name + "¦");
-    var c_del = 0; var del_max = 2; // delete at most 2 groups: latest and old under the same idx
-    for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
-      if ( task_name         === tg.name
-        || task_name_pre_re.test(tg.name)
-        || task_name_pno_re.test(tg.name)
-        || task_name_p0_re .test(tg.name)
-        ) {tabGroups.DeleteChild(tg);dbgv("deleted old " + tg.name);
-          c_del+=1; if (c_del >= del_max) {break;}};
+  // Create Lister subdirs
+  var tabGroupsDirL;
+  var PrefixDirL = sC.PrefixDirL +" "+ i
+  if (sC.PrefixDirL) {dbgv("saving in PrefixDirL ¦" + PrefixDirL +"¦");
+    var found = false;
+    for (var e = new Enumerator(tabGroupsDir); !e.atEnd(); e.moveNext()) {var tg   = e.item();
+      if ((tg.folder) && (tg.name === PrefixDirL)) {found = true; dbgv("∃ Lister folder = " + tg.name);
+        tabGroupsDirL = tg;};    }
+    if (!found) {dbgv("∄ PrefixDirL, creating a new one = " + PrefixDirL);
+      var tg_dir_res = tabGroupsDir.AddChildFolder(PrefixDirL); tabGroups.Save();
+      if (tg_dir_res)	{tabGroupsDirL = tg_dir_res  ;
+      } else         	{tabGroupsDirL = tabGroupsDir; err("Failed to create a tab group dir ¦" + PrefixDirL + "¦, will be saving without one...");}
     }
-    tg_res = tabGroups.AddChildGroup(task_name  );
-    tg0    = tabGroups.AddChildGroup(task_name_0);
-  // }
+  }
+
+  // Save tabs in a tab group
+  var c_del = 0; var del_max = 2; // delete at most 2 groups: latest and old under the same idx
+  for (var e = new Enumerator(tabGroupsDirL); !e.atEnd(); e.moveNext()) {var tg = e.item();
+    if ( task_name         === tg.name
+      || task_name_pre_re.test(tg.name)
+      || task_name_pno_re.test(tg.name)
+      || task_name_p0_re .test(tg.name)
+      ) {tabGroupsDirL.DeleteChild(tg);dbgv("deleted old " + tg.name);
+        c_del+=1; if (c_del >= del_max) {break;}};
+  }
+  tg_res = tabGroupsDirL.AddChildGroup(task_name  );
+  tg0    = tabGroupsDirL.AddChildGroup(task_name_0);
 
   if (tg_res && tg0) {dbgv("filling up new groups ¦" + task_name + "¦" + " and ¦"+ task_name_0 +"¦ with current Lister tabs ");
     tg_res.desc = "backup.TabGroupSave🕘 on " + cur_date_time;
