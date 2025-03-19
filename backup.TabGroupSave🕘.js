@@ -212,7 +212,7 @@ function OnTabGroupSave(scriptCmdData) {
       if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}}
     }
     tabGroups.Save();
-  } else {err("Failed to create a new tab group to save tabs to " + task_name);}
+  } else {err("Failed to create a new tab group to save tabs to " + task_name + " and " + task_name_0);}
   }
 }
 
