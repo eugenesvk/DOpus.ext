@@ -206,12 +206,12 @@ function OnTabGroupSave(scriptCmdData) {
     tg_res.closeexisting = sC.CloseOthers;
     tg0   .closeexisting = sC.CloseOthers;
     if (L.dual) { tg_res.dual = true; tg0.dual = true;
-      var tabList = L.tabsleft ; var tg_tabs = tg_res.lefttabs ; var tg0_tabs = tg_res.lefttabs ;
+      var tabList = L.tabsleft ; var tg_tabs = tg_res.lefttabs ; var tg0_tabs = tg0.lefttabs ;
       for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}
-      var tabList = L.tabsright; var tg_tabs = tg_res.righttabs; var tg0_tabs = tg_res.righttabs;
+      var tabList = L.tabsright; var tg_tabs = tg_res.righttabs; var tg0_tabs = tg0.righttabs;
       for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}
     } else {
-      var tabList = L.tabs; var tg_tabs = tg_res.tabs; var tg0_tabs = tg_res.tabs;
+      var tabList = L.tabs     ; var tg_tabs = tg_res.tabs     ; var tg0_tabs = tg0.tabs;
       if (tabList){for (var e=new Enumerator(tabList);!e.atEnd();e.moveNext()) {var tab = e.item(); tg_tabs.AddTab(tab.path); tg0_tabs.AddTab(tab.path);}}
     }
   } else {err("Failed to create a new tab group to save tabs to " + task_name + " and " + task_name_0);}
