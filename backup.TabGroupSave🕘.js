@@ -38,10 +38,27 @@ function setDefaults(D) {var sV=D.vars;
   sV.set('idx'         	,0         	 );
 }
 
-function OnStartup (D) { //StartupData no props docs.dopus.com/doku.php?id=reference:scripting_reference:scripting_objects:startupdata
+if     (DOpus.vars.Exists('is_backup.TabGroupSave🕘_first'      )) {
+} else {DOpus.vars.Set   ('is_backup.TabGroupSave🕘_first',false);p("is_first = false");}
+// function OnStartup (D) { //StartupData no props docs.dopus.com/doku.php?id=reference:scripting_reference:scripting_objects:startupdata
+// Listers are not available on startup yet, so not suitable to check for existing tabs
+// }
+function OnOpenLister_bug (D) { //OpenListerData
+  // todo: search in prefix dir / lister subdir
+  if (!D.after) {p("wait until tabs are created");return true}; //wait until all tabs are created
+  p("# tabs are created, new lister left=" + D.lister.tabsleft.count + " right=" + D.lister.tabsright.count);
+  LA=DOpus.listers.lastactive;
+  p("# tabs are created, new lister left=" + D.lister.tabsleft.count + " right=" + D.lister.tabsright.count);
+  // p("lastactive left=" + LA.tabsleft.count + " right=" + LA.tabsright.count);
+
+  // todo: reenable
+  // if     (DOpus.vars.Get('is_backup.TabGroupSave🕘_first')) {p("is_first = true"); return
+  // } else {DOpus.vars.Set('is_backup.TabGroupSave🕘_first',true); p("set is_first to true");};
   var sV=Script.vars, sC=Script.config, DC=DOpus.Create;
   var min_found = 1; // find at least this many "Empty Tab"s before triggering a restore
-  if (findTabEmpty(min_found)) {
+  if (findTabEmpty(D.lister, min_found)) { // TODO: bugs https://resource.dopus.com/t/incorrect-number-of-tabs-for-a-new-lister-in-a-script/54963
+  // if (findTabEmpty(LA, min_found)) {
+    return ; //todo remove to actually load
     if (min_found>1) {var mult = "s"} else {var mult = ""};
     dbg("⚠ Found ≥" +min_found+ " 'Empty Tab'" +mult+ ", restoring tabs from backup!")
 
@@ -82,6 +99,7 @@ function OnStartup (D) { //StartupData no props docs.dopus.com/doku.php?id=refer
     // find the latest group to restore from (only 1 lister is supported now)
     var i = 1; // use the first lister. TODO: restore all listers?
     var task_name_prefix = 'L'+i+ sC.PrefixFile +' 0Startup';
+    // todo: find NON startup, that is doing nothing
     var task_name_pre_re = new RegExp(task_name_prefix +'.*',"gm");
     for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg = e.item();
       if (task_name_pre_re.test(tg.name)) {
@@ -94,15 +112,17 @@ function OnStartup (D) { //StartupData no props docs.dopus.com/doku.php?id=refer
   }
 }
 
-function findTabEmpty(min_found) {
+function findTabEmpty(L, min_found) {
   var sV=Script.vars, sC=Script.config, DC=DOpus.Create;
-  var listers = DOpus.listers; var i=0;
-  var found = 0
-  for   (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
-    for (var lr=0;lr<2;lr++) { var tabs = (lr==0) ? L.tabsright : L.tabsleft;
-      for (var i=0;i<tabs.count;i++) { // no length for a generic collection
-        dbg("tabs[i].path = " + tabs[i].path);
-        if ((tabs[i].path+"") == "Empty Tab"); {
+  var found = 0;
+  for     (var lr=0;lr<2         ;lr++) { var tabs = (lr==0) ? L.tabsleft : L.tabsright;
+    if (tabs.count) { p(" lr="+lr+" tabs.count = " + tabs.count);
+      var ti = 0;
+      for (var e=new Enumerator(tabs); !e.atEnd(); e.moveNext()) { var tab = e.item(); ti += 1;
+        var tab_path_s = tab.path + "";
+        p(tab.right + " tabs[" +ti+"].path = " + tab_path_s); // todo replace with dbg
+        if (tab_path_s === "") {
+          p("✓✓✓✓ FOUND an empty tab = " + tab_path_s);
           found += 1; if (found >= min_found) {return true}
         }
       }
