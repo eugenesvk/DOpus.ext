@@ -138,6 +138,10 @@ function OnAddCommands(addCmdD) {
   cmd.hide       	= false;
 }
 
+function OnCloseLister(D) { // After a lister has been closed
+  var dopusCmd = DOpus.NewCommand;
+  dopusCmd.RunCommand('TabGroupSave');
+}
 
 function OnTabGroupLoadLatest(scriptCmdData) {
   var sV = Script.vars, sC = Script.config, DC = DOpus.Create
