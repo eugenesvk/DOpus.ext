@@ -137,10 +137,64 @@ function OnAddCommands(addCmdD) {
   // cmd.icon    	= '';
   cmd.hide       	= false;
 }
+function OnAddCommands(addCmdD) {
+  var cmd        	= addCmdD.AddCommand();
+  cmd.name       	= 'TabGroupLoadLatest';
+  cmd.method     	= 'OnTabGroupLoadLatest';
+  cmd.desc       	= "Load the latest saved tab group";
+  cmd.label      	= 'Load the latest tab set';
+  // cmd.template	= 'fg/so,bg/so';
+  // cmd.icon    	= '';
+  cmd.hide       	= false;
+}
 
 function OnCloseLister(D) { // After a lister has been closed
   var dopusCmd = DOpus.NewCommand;
   dopusCmd.RunCommand('TabGroupSave');
+}
+
+function OnTabGroupLoadLatest(scriptCmdData) {
+  var sV = Script.vars, sC = Script.config, DC = DOpus.Create
+    , func	= scriptCmdData.func  // info about the default source/dest of the command, as well as details about how it was invoked
+    , cmd 	= func.command        // pre-filled Command object that can be used to run commands against the source and destination tabs. =DOpusFactory.Command and setting the source and destination tabs manually
+    , tab 	= func.sourcetab      //
+    , args	= func.args           ;
+
+  var tabGroups = DOpus.TabGroups;
+  var tabGroupsDir;
+  // Create subdirs if configured
+  var PrefixDir = sC.PrefixDir
+  if (sC.PrefixDir) {dbgv("searching in PrefixDir ¦" + PrefixDir +"¦");
+    var found = false;
+    for (var e = new Enumerator(tabGroups); !e.atEnd(); e.moveNext()) {var tg   = e.item();
+      if ((tg.folder) && (tg.name === PrefixDir)) {found = true; dbgv("∃ folder = " + tg.name);
+          tabGroupsDir = tg}    }
+  } else {tabGroupsDir = tabGroups}
+
+  var listers = DOpus.listers; var i=0;
+  for (var li = new Enumerator(listers); !li.atEnd(); li.moveNext()) {var L = li.item(); i+=1;
+  var LPre = ""; if (!sC.PrefixDirL) {LPre = "L"+i};
+  var task_name_pre_0  = LPre + sC.PrefixFile +' 00Latest';
+  var task_name_p0_re  = new RegExp(task_name_pre_0  +'.*',"gm");
+  var task_name_0 = task_name_pre_0;
+
+  // Find Lister subdirs
+  var tabGroupsDirL;
+  var PrefixDirL = sC.PrefixDirL +" "+ i
+  if (sC.PrefixDirL) {dbgv("searching in PrefixDirL ¦" + PrefixDirL +"¦");
+    var found = false;
+    for (var e = new Enumerator(tabGroupsDir); !e.atEnd(); e.moveNext()) {var tg   = e.item();
+      if ((tg.folder) && (tg.name === PrefixDirL)) {found = true; dbgv("∃ Lister folder = " + tg.name);
+          tabGroupsDirL = tg}}
+  } else {tabGroupsDirL = tabGroupsDir}
+
+  // Restore tab group
+  for (var e = new Enumerator(tabGroupsDirL); !e.atEnd(); e.moveNext()) {var tg = e.item();
+    if (task_name_p0_re .test(tg.name)) {
+      cmd.RunCommand("Go TABGROUPLOAD \"" + tg.name + "\""); dbgv("restored old " + tg.name);
+      break;};
+    }
+  }
 }
 
 function OnTabGroupLoadLatest(scriptCmdData) {
