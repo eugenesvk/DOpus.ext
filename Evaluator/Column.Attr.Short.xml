@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<evalcolumn align="1" attrrefresh="no" autorefresh="yes" category="std" customgrouping="no" foldertype="shell" header="⅊" keyword="attr_shortε" maxstars="5" namerefresh="no" nocache="no" reversegroups="no" reversesort="no" supportmarkup="no" title="Attributes.Short.ε" type="0" width="2">// v0.8@25-09
+// Column formatted with shorter attribute indicators (no &apos;-&apos;), reverse &apos;i&apos; shown when content indexing is enabled, and smaller symbols ₐ vs a
+  // do order and reversing manually since there are no loops in Evaluator
+
+if (!IsSet(attr)) {return;}
+
+flag = [ // attribute numeric flag constants, use bitwise &amp; comparison to check a flag status from attr value
+  // case insensitive! s=S
+  //        	    flag_x_N learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants
+  r =      1	; //read_only          	F  apps can read file, but not write/delete it (not honored on dirs)
+  h =      2	; //hidden             	FD not included in an ordinary directory listing
+  s =      4	; //system             	FD OS uses a part of, or uses exclusively
+  a =     32	; //archive            	FD apps typically mark files for backup or removal
+  t =    256	; //temporary          	F  ×Opus× signals to FS to avoid writing to disk
+  sp=    512	; //sparse             	F  ×≝Opus +custom× sparse file
+  c =   2048	; //compressed         	F: all data is compressed
+  o =   4096	; //offline_storage    	F file data not available immediately (physically moved to offline storage). Apps should not arbitrarily change this attribute
+  //        	                       	D: ≝compression for new files/subdirs
+  i =   8192	; //not_content_indexed	not to be indexed by the content indexing service
+  e =  16384	; //encrypted (XOR c)  	F: all data streams are encrypted
+  //        	                       	D: ≝encryption for new files/subdirs
+  l =   1024	; //reparse_point      	×≝Opus +custom×
+  //        	                       	FD has an associated reparse point or
+  //        	                       	F = symbolic link
+  // Used by Remote Storage, which is the hierarchical storage management software
+  p =  524288	; //  pinned	 ×≝Opus +custom× User intent that file/dir should be     kept fully present locally even when not being actively accessed
+  u = 1048576	; //unpinned	 ×≝Opus ±custom× User intent that file/dir should be NOT kept fully present locally except when being actively accessed
+]
+
+// FILE_ATTRIBUTE_Constant	Value               	FD	Description
+//READONLY                	      1 (0x_______1)	F 	App can read, not write/delete it
+//HIDDEN                  	      2 (0x_______2)	FD	Not included in an ordinary directory listing
+//SYSTEM                  	      4 (0x_______4)	FD	OS uses a part of or exclusively
+//DIRECTORY               	     16 (0x______10)	 D	handle that identifies a directory
+//ARCHIVE                 	     32 (0x______20)	FD	App use to mark for backup/removal
+//DEVICE                  	     64 (0x______40)	. 	RESERVED for system use
+//NORMAL                  	    128 (0x______80)	F 	No other attr set, only valid alone
+//TEMPORARY               	    256 (0x_____100)	F 	Temp storage. File systems avoid writing data back to mass storage if sufficient cache memory is available, because typically, an app deletes a temporary file after the handle is closed. In that scenario, the system can entirely avoid writing the data. Otherwise, the data is written after the handle is closed.
+//SPARSE_FILE             	    512 (0x_____200)	F 	sparse file
+//REPARSE_POINT           	   1024 (0x_____400)	FD	FD has an associated reparse point or
+//                        	                    	  	F = symbolic link
+//COMPRESSED              	   2048 (0x_____800)	FD	is compressed
+//                        	                    	  	F: all of the data in the file is compressed
+//                        	                    	  	D: compression is ≝ for new F/subD
+//OFFLINE                 	   4096 (0x____1000)	F 	data of a file is not available immediately. This attribute indicates that the file data is physically moved to offline storage. This attribute is used by Remote Storage, which is the hierarchical storage management software. App should not arbitrarily change this attribute.
+//UNPINNED                	1048576 (0x__100000)	. 	indicates that the file or directory should not be kept fully present locally except when being actively accessed (for hierarchical storage management software)
+//NOT_CONTENT_INDEXED     	   8192 (0x____2000)	FD	not to be indexed by the content indexing service
+//ENCRYPTED               	  16384 (0x____4000)	FD	encrypted
+//                        	                    	  	F: all data streams in the file are encrypted
+//                        	                    	  	D: encryption is ≝ for new F/subD
+//INTEGRITY_STREAM        	  32768 (0x____8000)	FD	[ReFS] Dir or user data stream is configured with integrity, not in an ordinary directory listing. The integrity setting persists with the file if it&apos;s renamed. If a file is copied the destination file will have integrity set if either the source file or destination directory have integrity set
+//VIRTUAL                 	  65536 (0x___10000)	. 	RESERVED for system use
+//NO_SCRUB_DATA           	 131072 (0x___20000)	. 	[ReFS | Storage Spaces] user data stream not to be read by the background data integrity scanner (AKA scrubber). When set on a directory it only provides inheritance. Not in an ordinary directory listing
+//EA                      	 262144 (0x___40000)	FD	with extended attributes. IMPORTANT: This constant is for internal use only.
+//PINNED                  	 524288 (0x___80000)	. 	indicates user intent that the file or directory should be kept fully present locally even when not being actively accessed (for hierarchical storage management software)
+//UNPINNED                	1048576 (0x__100000)	. 	indicates that the file or directory should not be kept fully present locally except when being actively accessed (for hierarchical storage management software)
+//RECALL_ON_OPEN          	 262144 (0x___40000)	. 	only in directory enumeration classes (FILE_DIRECTORY_INFORMATION, FILE_BOTH_DIR_INFORMATION, etc.). F/D has no physical representation on the local system, it&apos;s virtual. Opening the item will be more expensive than normal, e.g. it will cause at least some of it to be fetched from a remote store.
+//RECALL_ON_DATA_ACCESS   	4194304 (0x__400000)	. 	F/D not fully present locally
+//                        	                    	  	F: not all of its data is on local storage (e.g. it may be sparse with some data still in remote storage)
+//                        	                    	  	D: some of the directory contents are being virtualized from another location
+//                        	                    	  	Reading F / enumerating D will be more expensive than normal, e.g. it will cause at least some of the file/directory content to be fetched from a remote store. Only kernel-mode callers can set this bit. File system mini filters below the 180000 – 189999 altitude range (FSFilter HSM Load Order Group) must not issue targeted cached reads or writes to files that have this attribute set. This could lead to cache pollution and potential file corruption. For more information, see Handling placeholders
+
+pad = &quot;&quot;; // or &quot; &quot;
+myAttr = &quot;&quot;;
+myAttr += ( ((attr &amp; flag.r )	== flag.r ) ? &quot;r&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.h )	== flag.h ) ? &quot;ₕ&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.s )	== flag.s ) ? &quot;ₛ&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.sp)	== flag.sp) ? &quot;S&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.a )	== flag.a ) ? &quot;ₐ&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.t )	== flag.t ) ? &quot;t&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.c )	== flag.c ) ? &quot;c&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.i )	== flag.i ) ? pad	: &quot;ⁱ&quot;) ; // reverse, show when Indexed
+myAttr += ( ((attr &amp; flag.e )	== flag.e ) ? &quot;ₑ&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.l )	== flag.l ) ? &quot;l&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.o )	== flag.o ) ? &quot;ₒ&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.p )	== flag.p ) ? &quot;ₚ&quot;	: pad) ;
+myAttr += ( ((attr &amp; flag.u )	== flag.u ) ? &quot;u&quot;	: pad) ;
+
+return myAttr as str
+</evalcolumn>
