@@ -7,6 +7,8 @@
 //   32  	flag_a_archive                 	// apps typically use this attribute to mark files for backup or removal
 //    2  	flag_h_hidden                  	// not included in an ordinary directory listing
 //    4  	flag_s_system                  	// OS uses a part of, or uses exclusively
+//  256  	temporary                      	F  ×Opus× signals to FS to avoid writing to disk
+//  512  	sparse                         	F  ×≝Opus +custom× sparse file
 // 2048  	flag_c_compressed              	// file: all of the data is compressed. dir: compression is the default for newly created files and subdirs
 //16384  	flag_e_encrypted (exclusive  ↑)	// file: all data streams are encrypted. dir: encryption is the default for newly created files and subdirs
 //       	???                            	//
@@ -34,6 +36,8 @@ function OnInit(D) {
   C.add("p"          	).val("ₚ"  	).g('Replace'	).des('Replace Pinned attribute with...');
   C.add("r"          	).val("r"  	).g('Replace'	).des('Replace Readonly attribute with...');
   C.add("s"          	).val("ₛ"  	).g('Replace'	).des('Replace System attribute with...');
+  C.add("t"          	).val("t"  	).g('Replace'	).des('Replace Temporary attribute with...');
+  C.add("sp"         	).val("S"  	).g('Replace'	).des('Replace Sparse attribute with...');
   C.add("DebugOutput"	).val(false	).g('  Debug'	).des('Enable debug output in the "Script log"');
 }
 
@@ -82,6 +86,8 @@ function configUnits() { // Read user config and save on config updates with a c
   subMap("p") = sC.p;
   subMap("r") = sC.r;
   subMap("s") = sC.s;
+  subMap("t") = sC.t;
+  subMap("sp") = sC.sp;
   sV.set("subMap", subMap);
   dbg("configUnits|End|: subMap="+map2str(subMap));
 }
