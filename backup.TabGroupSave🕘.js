@@ -136,8 +136,7 @@ function OnAddCommands(addCmdD) {
   // cmd.template	= 'fg/so,bg/so';
   // cmd.icon    	= '';
   cmd.hide       	= false;
-}
-function OnAddCommands(addCmdD) {
+
   var cmd        	= addCmdD.AddCommand();
   cmd.name       	= 'TabGroupLoadLatest';
   cmd.method     	= 'OnTabGroupLoadLatest';
