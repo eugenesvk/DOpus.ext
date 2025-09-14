@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<evalcolumn align="1" attrrefresh="no" autorefresh="yes" category="std" customgrouping="no" foldertype="shell" header="⅊" keyword="attr_shortε" maxstars="5" namerefresh="no" nocache="no" reversegroups="no" reversesort="no" supportmarkup="no" title="Attributes.Short.ε" type="0" width="2">// v0.8@25-09
+<evalcolumn align="1" attrrefresh="yes" autorefresh="yes" category="std" customgrouping="no" foldertype="shell" header="⅊" keyword="attr_shortε" maxstars="5" namerefresh="no" nocache="no" reversegroups="no" reversesort="no" supportmarkup="no" title="Attributes.Short.ε" type="0" width="2">// v0.8@25-09
 // Column formatted with shorter attribute indicators (no &apos;-&apos;), reverse &apos;i&apos; shown when content indexing is enabled, and smaller symbols ₐ vs a
   // do order and reversing manually since there are no loops in Evaluator
 
