@@ -70,7 +70,7 @@ myAttr += ( ((attr &amp; flag.sp)	== flag.sp) ? &quot;S&quot;	: pad) ;
 myAttr += ( ((attr &amp; flag.a )	== flag.a ) ? &quot;ₐ&quot;	: pad) ;
 myAttr += ( ((attr &amp; flag.t )	== flag.t ) ? &quot;t&quot;	: pad) ;
 myAttr += ( ((attr &amp; flag.c )	== flag.c ) ? &quot;c&quot;	: pad) ;
-myAttr += ( ((attr &amp; flag.i )	== flag.i ) ? pad	: &quot;ⁱ&quot;) ; // reverse, show when Indexed
+myAttr += ( ((attr &amp; flag.i )	== flag.i ) ? pad          	: &quot;ⁱ&quot;) ; // reverse, show when Indexed
 myAttr += ( ((attr &amp; flag.e )	== flag.e ) ? &quot;ₑ&quot;	: pad) ;
 myAttr += ( ((attr &amp; flag.l )	== flag.l ) ? &quot;l&quot;	: pad) ;
 myAttr += ( ((attr &amp; flag.o )	== flag.o ) ? &quot;ₒ&quot;	: pad) ;
