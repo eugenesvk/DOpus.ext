@@ -29,11 +29,11 @@ Some of the benefits for compactness and alignment
 A few limitations:
   - no background **size graph** as that feature is not implemented for evaluator columns
   - single-column version (value + label):
-    - must be ‹left-aligned (it sidesteps the issue of aligning variable-width labels by left-aligning only numbers)
+    - must be ‹left-aligned (it sidesteps the issue of aligning variable-width labels by left-aligning only the numbers)
   - two-column version (value, label):
     - with column padding the total width is bigger vs the default size column
+      - alternative: could remove one extra space at the end of the value column to save a bit of extra width, but then would lose the more valuable alignment of `123` b and `2.12` kb 
     - less efficient, 2 evaluator calls instead of 1
-    - alternative: could remove one extra space at the end of the value column to save a bit of extra width, but then would lose the more valuable alignment of `123` b and `2.12` kb 
 
 **To install**
   - copy file's content to clipboard
