@@ -28,38 +28,39 @@ flag = [ // attribute numeric flag constants, use bitwise &amp; comparison to ch
   u = 1048576	; //unpinned	 ×≝Opus ±custom× User intent that file/dir should be NOT kept fully present locally except when being actively accessed
 ]
 
-// FILE_ATTRIBUTE_Constant	Value               	FD	Description
-//READONLY                	      1 (0x_______1)	F 	App can read, not write/delete it
-//HIDDEN                  	      2 (0x_______2)	FD	Not included in an ordinary directory listing
-//SYSTEM                  	      4 (0x_______4)	FD	OS uses a part of or exclusively
-//DIRECTORY               	     16 (0x______10)	 D	handle that identifies a directory
-//ARCHIVE                 	     32 (0x______20)	FD	App use to mark for backup/removal
-//DEVICE                  	     64 (0x______40)	. 	RESERVED for system use
-//NORMAL                  	    128 (0x______80)	F 	No other attr set, only valid alone
-//TEMPORARY               	    256 (0x_____100)	F 	Temp storage. File systems avoid writing data back to mass storage if sufficient cache memory is available, because typically, an app deletes a temporary file after the handle is closed. In that scenario, the system can entirely avoid writing the data. Otherwise, the data is written after the handle is closed.
-//SPARSE_FILE             	    512 (0x_____200)	F 	sparse file
-//REPARSE_POINT           	   1024 (0x_____400)	FD	FD has an associated reparse point or
-//                        	                    	  	F = symbolic link
-//COMPRESSED              	   2048 (0x_____800)	FD	is compressed
-//                        	                    	  	F: all of the data in the file is compressed
-//                        	                    	  	D: compression is ≝ for new F/subD
-//OFFLINE                 	   4096 (0x____1000)	F 	data of a file is not available immediately. This attribute indicates that the file data is physically moved to offline storage. This attribute is used by Remote Storage, which is the hierarchical storage management software. App should not arbitrarily change this attribute.
-//UNPINNED                	1048576 (0x__100000)	. 	indicates that the file or directory should not be kept fully present locally except when being actively accessed (for hierarchical storage management software)
-//NOT_CONTENT_INDEXED     	   8192 (0x____2000)	FD	not to be indexed by the content indexing service
-//ENCRYPTED               	  16384 (0x____4000)	FD	encrypted
-//                        	                    	  	F: all data streams in the file are encrypted
-//                        	                    	  	D: encryption is ≝ for new F/subD
-//INTEGRITY_STREAM        	  32768 (0x____8000)	FD	[ReFS] Dir or user data stream is configured with integrity, not in an ordinary directory listing. The integrity setting persists with the file if it&apos;s renamed. If a file is copied the destination file will have integrity set if either the source file or destination directory have integrity set
-//VIRTUAL                 	  65536 (0x___10000)	. 	RESERVED for system use
-//NO_SCRUB_DATA           	 131072 (0x___20000)	. 	[ReFS | Storage Spaces] user data stream not to be read by the background data integrity scanner (AKA scrubber). When set on a directory it only provides inheritance. Not in an ordinary directory listing
-//EA                      	 262144 (0x___40000)	FD	with extended attributes. IMPORTANT: This constant is for internal use only.
-//PINNED                  	 524288 (0x___80000)	. 	indicates user intent that the file or directory should be kept fully present locally even when not being actively accessed (for hierarchical storage management software)
-//UNPINNED                	1048576 (0x__100000)	. 	indicates that the file or directory should not be kept fully present locally except when being actively accessed (for hierarchical storage management software)
-//RECALL_ON_OPEN          	 262144 (0x___40000)	. 	only in directory enumeration classes (FILE_DIRECTORY_INFORMATION, FILE_BOTH_DIR_INFORMATION, etc.). F/D has no physical representation on the local system, it&apos;s virtual. Opening the item will be more expensive than normal, e.g. it will cause at least some of it to be fetched from a remote store.
-//RECALL_ON_DATA_ACCESS   	4194304 (0x__400000)	. 	F/D not fully present locally
-//                        	                    	  	F: not all of its data is on local storage (e.g. it may be sparse with some data still in remote storage)
-//                        	                    	  	D: some of the directory contents are being virtualized from another location
-//                        	                    	  	Reading F / enumerating D will be more expensive than normal, e.g. it will cause at least some of the file/directory content to be fetched from a remote store. Only kernel-mode callers can set this bit. File system mini filters below the 180000 – 189999 altitude range (FSFilter HSM Load Order Group) must not issue targeted cached reads or writes to files that have this attribute set. This could lead to cache pollution and potential file corruption. For more information, see Handling placeholders
+//file_attribute_?     	    Dec₁₀	  Hex₁₆	FD	Description
+//readonly             	        1	      1	F 	App can read, not write/delete it
+//hidden               	        2	      2	FD	Not included in an ordinary directory listing
+//system               	        4	      4	FD	OS uses a part of or exclusively
+//_n/a_                	        8	      8	  	RESERVED for old DOS VOLID (volume ID)
+//directory            	       16	     10	 D	handle that identifies a directory
+//archive              	       32	     20	FD	App use to mark for backup/removal
+//device               	       64	     40	. 	RESERVED for system use
+//normal               	      128	     80	F 	No other attr set, only valid alone
+//temporary            	      256	    100	F 	Temp storage. File systems avoid writing data back to mass storage if sufficient cache memory is available, because typically, an app deletes a temporary file after the handle is closed. In that scenario, the system can entirely avoid writing the data. Otherwise, the data is written after the handle is closed.
+//sparse_file          	      512	    200	F 	sparse file
+//reparse_point        	    1,024	    400	FD	FD has an associated reparse point or
+//                     	         	       	  	F = symbolic link
+//compressed           	    2,048	    800	FD	is compressed
+//                     	         	       	  	F: all of the data in the file is compressed
+//                     	         	       	  	D: compression is ≝ for new F/subD
+//offline              	    4,096	   1000	F 	F data not available immediately. Indicates that F data is physically moved to offline storage. Used by Remote Storage (hierarchical storage management software). App should not arbitrarily change this attribute
+//unpinned             	1,048,576	10,0000	. 	indicates that the file or directory should not be kept fully present locally except when being actively accessed (for hierarchical storage management software)
+//not_content_indexed  	    8,192	   2000	FD	not to be indexed by the content indexing service
+//encrypted            	   16,384	   4000	FD	encrypted
+//                     	         	       	  	F: all data streams in the file are encrypted
+//                     	         	       	  	D: encryption is ≝ for new F/subD
+//integrity_stream     	   32,768	   8000	FD	[ReFS] Dir or user data stream is configured with integrity, not in an ordinary directory listing. The integrity setting persists with the file if it&apos;s renamed. If a file is copied the destination file will have integrity set if either the source file or destination directory have integrity set
+//virtual              	   65,536	 1,0000	. 	RESERVED for system use
+//no_scrub_data        	  131,072	 2,0000	. 	[ReFS | Storage Spaces] user data stream not to be read by the background data integrity scanner (AKA scrubber). When set on a directory it only provides inheritance. Not in an ordinary directory listing
+//ea                   	  262,144	 4,0000	FD	with extended attributes. IMPORTANT: This constant is for internal use only.
+//pinned               	  524,288	 8,0000	. 	indicates user intent that the file or directory should be kept fully present locally even when not being actively accessed (for hierarchical storage management software)
+//unpinned             	1,048,576	10,0000	. 	indicates that F/D shouldn't be kept fully present locally except when being actively accessed (for hierarchical storage management software)
+//recall_on_open       	  262,144	 4,0000	. 	only in directory enumeration classes (FILE_DIRECTORY_INFORMATION, FILE_BOTH_DIR_INFORMATION, etc.). F/D has no physical representation on the local system, it&apos;s virtual. Opening the item will be more expensive than normal, e.g. it will cause at least some of it to be fetched from a remote store.
+//recall_on_data_access	4,194,304	40,0000	. 	F/D not fully present locally
+//                     	         	       	  	F: not all of its data is on local storage (e.g. it may be sparse with some data still in remote storage)
+//                     	         	       	  	D: some of the directory contents are being virtualized from another location
+//                     	         	       	  	Reading F / enumerating D will be more expensive than normal, e.g. it will cause at least some of the file/directory content to be fetched from a remote store. Only kernel-mode callers can set this bit. File system mini filters below the 180000 – 189999 altitude range (FSFilter HSM Load Order Group) must not issue targeted cached reads or writes to files that have this attribute set. This could lead to cache pollution and potential file corruption. For more information, see Handling placeholders
 
 pad = &quot;&quot;; // or &quot; &quot;
 myAttr = &quot;&quot;;
