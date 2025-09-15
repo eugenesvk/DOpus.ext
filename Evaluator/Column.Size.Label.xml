@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<evalcolumn align="0" attrrefresh="no" autorefresh="yes" category="size" customgrouping="no" foldertype="shell" header="z" keyword="size.L.ε" maxstars="5" namerefresh="no" nocache="no" reversegroups="no" reversesort="yes" supportmarkup="yes" title="Size.Label.ε" type="0" width="1">// Column.Size.Label  v0.1@25-09
+  // ✗ no background size graph
+  // ✗ 2 columns (value and label)
+    // with padding both are wider vs ≝size column
+    // less efficient, 2 evaluator calls instead of 1
+  // ± aligning bytes to kb also makes it a bit wider
+    //   120 bytes is vertically aligned to
+    // 4.12  kb
+    // could remove the last ␠-pad in the value column, but then, `1` would be at `.`
+  // Otherwise more compact and aligned
+    // ⸱ tiny dot for 0 instead of &apos;0 bytes&apos;
+      // ⸱
+      // 0 bytes
+    // Byte values are visually smaller since they are positioned to the right of the decimal point
+      //   120 bytes
+      // 4.12  kb
+    // ↑ also &apos;120&apos; in bytes is vertically aligned to `12` in KB
+    // This allows removing `b` and `kb` labels, position alone is enough
+    // Rounding doesn&apos;t break alignment, so 1 is vertically aligned
+      // 1    MB
+      // 1.01 MB
+      //    1 MB instead of ≝size column
+    // Label width doesn&apos;t break alignment, so 1 is vertically aligned
+      // 1 MB
+      // 1 GB
+  // bold and uppercased &apos;G&apos;+ label to signal bigger size
+    // can also red-color &apos;T&apos; for even more prominence?
+
+
+if (!IsSet(size))	{return;}
+binary_multiplier = false; // Display size as Binary (2¹⁰=1024), otherwise Decimal (10³=1000)
+k:double = (binary_multiplier == true) ? 1024 : 1000;
+
+o = &quot;&quot;; is_bold = false; //is_gray = false;
+if      	(size == 0 )     	{o = &quot;&quot; ;
+} elseif	(size &lt;     k )  	{o = &quot;&quot; ;
+} elseif	(size &lt; Pow(k,2))	{o = &quot;&quot;; //&quot;k&quot;; is_gray = true;
+} elseif	(size &lt; Pow(k,3))	{o = &quot;m&quot;;
+} elseif	(size &lt; Pow(k,4))	{o = &quot;G&quot;; is_bold = true;
+} elseif	(size &lt; Pow(k,5))	{o = &quot;T&quot;; is_bold = true;
+} elseif	(size &lt; Pow(k,6))	{o = &quot;P&quot;; is_bold = true;
+} elseif	(size &lt; Pow(k,7))	{o = &quot;E&quot;; is_bold = true;
+} elseif	(size &lt; Pow(k,8))	{o = &quot;Z&quot;; is_bold = true;
+} elseif	                 	{o = &quot;Y&quot;; is_bold = true;
+}
+//pre += is_gray ? &quot;&lt;#a3a3a3&gt;&quot; : &quot;&quot;;
+//pos += is_gray ? &quot;&lt;/#&gt;&quot; : &quot;&quot;;
+return operation == &quot;markup&quot; ? (is_bold ? &quot;&lt;b&gt;&quot;+o+&quot;&lt;/b&gt;&quot; : o) : o;
+</evalcolumn>
