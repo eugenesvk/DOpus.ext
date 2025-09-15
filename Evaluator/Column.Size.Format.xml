@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<evalcolumn align="1" attrrefresh="no" autorefresh="yes" category="size" customgrouping="no" foldertype="shell" header="S" keyword="size.ε" maxstars="5" namerefresh="no" nocache="no" reversegroups="no" reversesort="yes" supportmarkup="no" title="Size.ε" type="0" width="6">// Column.Size.Format  v0.1@25-09
+  // 0→⸱ tiny dot, vertically aligned numbers, shorter header
+  // EnEm¦Figure¦Punctuation¦Thin¦Hair (jkorpela.fi/chars/spaces.html)
+  // ¦n¦m¦1¦.¦t¦h¦
+  // ¦ ¦ ¦ ¦ ¦ ¦ ¦
+if (!IsSet(size))	{return;}
+binary_multiplier = false; // Display size as Binary (2¹⁰=1024), otherwise Decimal (10³=1000)
+
+k:double = (binary_multiplier == true) ? 1024 : 1000;
+
+o = &quot;&quot;;
+sz = size as double; // for correct rounding of .xy
+if       (size == 0 )     	{return &quot;⸱   &quot;; // align 4.12_ kb with 123 bytes
+} elseif (size &lt;     k )  	{return size as str
+} elseif (size &lt; Pow(k,2))	{o = ( (sz / Pow(k,1)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif (size &lt; Pow(k,3))	{o = ( (sz / Pow(k,2)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif (size &lt; Pow(k,4))	{o = ( (sz / Pow(k,3)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif (size &lt; Pow(k,5))	{o = ( (sz / Pow(k,4)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif (size &lt; Pow(k,6))	{o = ( (sz / Pow(k,5)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif (size &lt; Pow(k,7))	{o = ( (sz / Pow(k,6)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif (size &lt; Pow(k,8))	{o = ( (sz / Pow(k,7)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+} elseif                  	{o = ( (sz / Pow(k,8)) as %.02); o=RegExS(o,&quot;\.00$&quot;,&quot;   &quot;); o=RegExS(o,&quot;0$&quot;,&quot; &quot;); o+=&quot; &quot;;
+}
+return o;
+</evalcolumn>
