@@ -4,7 +4,8 @@
   // EnEm¦Figure¦Punctuation¦Thin¦Hair (jkorpela.fi/chars/spaces.html)
   // ¦n¦m¦1¦.¦t¦h¦
   // ¦ ¦ ¦ ¦ ¦ ¦ ¦
-if (!IsSet(size))	{return;}
+if (!IsSet(size))	{return}
+if (operation == &quot;sort&quot;) {return size}
 binary_multiplier = false; // Display size as Binary (2¹⁰=1024), otherwise Decimal (10³=1000)
 
 k:double = (binary_multiplier == true) ? 1024 : 1000;
