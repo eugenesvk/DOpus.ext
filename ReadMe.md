@@ -1,11 +1,10 @@
 <p align="center">
-Brief description
+Extensions of the Directory Opus file manager
 <br>
-(description continued)
+(Windows)
 </p>
 
 <p align="center">  
-description continued
 </p>
 
 
@@ -13,7 +12,7 @@ description continued
 
 ## Install
 
-Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your `~\AppData\Roaming\GPSoftware\Directory Opus\Script AddIns` folder.
+Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your `%AppData%\GPSoftware\Directory Opus\Script AddIns` folder.
 
 ## Use
 
