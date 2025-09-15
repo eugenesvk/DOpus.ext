@@ -48,8 +48,8 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
 - [Column.Attr.Short.ε](./Evaluator/Column.Attr.Short.xml) (evaluator version of ↑), comparison to ≝
   ![Column.Attr.Short.ε vs ≝](./img/Column.Attr.Short.png)
 - [Column.SizeFormat](./Column.SizeFormat.js) adds columns with with shorter and vertically aligned size indicators that also allow custom handling of symlinks
-- [Column.Size.ε](./Evaluator/Column.Size.Format.xml) [Column.Size.Label.ε](./Evaluator/Column.Size.Label.xml) (faster, but more formatting-limited evaluator version of ↑), comparison to ≝ (for more details see [Column.Size.Format.md](./doc/Column.Size.Format.md))
-  ![Column.Size.ε vs ≝](./img/Column.Size.Format.S.png)
+- [Column.Size.Full.ε](./Evaluator/Column.Size.Full.xml) (right-aligned single column with value+label)[Column.Size.ε](./Evaluator/Column.Size.Format.xml) [Column.Size.Label.ε](./Evaluator/Column.Size.Label.xml) (left aligned, but separate columns for value and label) faster, but more formatting-limited evaluator version of ↑, comparison to ≝ (for more details see [Column.Size.Format.md](./doc/Column.Size.Format.md))
+  ![Column.Size.ε + Column.Size.Label.ε vs ≝](./img/Column.Size.Format.S.png)
 - [Column.FileAccess](./Column.FileAccess.js) to show file read-only/read-write/noaccess status with customizable labels
 - [Column.Size.ε](./Column.FileAccess.js) to show file read-only/read-write/noaccess status with customizable labels
 
