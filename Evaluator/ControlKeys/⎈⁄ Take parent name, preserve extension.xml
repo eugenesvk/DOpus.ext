@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<regexsel key="191,2" name="Take parent name, preserve extension">
+	<eval>if (Len(Val(&quot;path&quot;)) == 0) return value;
+newstem = MakeLegal(FilePart(path),&quot;n&quot;);
+newLen = Len(newstem);
+oldLen = Len(valstem);
+lenDelta = newLen - oldLen;
+if (lenDelta &lt; 0 || selstart &gt;= oldLen) {
+  selstart = Max(0, selstart + lenDelta);
+}
+if (lenDelta &lt; 0 || selend &gt;= oldLen) {
+  selend = Max(0, selend + lenDelta);
+}
+return newstem + valext;</eval>
+</regexsel>

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+S" name="▋Select words" regex="[^\s\.]+" repeat="yes" />

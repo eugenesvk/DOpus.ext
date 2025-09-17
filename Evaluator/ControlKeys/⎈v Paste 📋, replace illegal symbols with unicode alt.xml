@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+V" name="Paste clipboard, replacing illegal filename symbols with legal unicode alternatives">
+	<eval>clip = Clip();
+clip = Replace(clip,&quot;*&quot;,&quot;∗&quot;);
+clip = Replace(clip,&quot;:&quot;,&quot;꞉&quot;);
+clip = Replace(clip,&quot;\&quot;,&quot;⧵&quot;);
+clip = Replace(clip,&quot;|&quot;,&quot;¦&quot;);
+clip = Replace(clip,&quot;&lt;&quot;,&quot;‹&quot;);
+clip = Replace(clip,&quot;&gt;&quot;,&quot;›&quot;);
+clip = Replace(clip,&quot;/&quot;,&quot;⁄&quot;); // ⁄=fraction slash; ⧸=big solidus
+clip = Replace(clip,&quot;?&quot;,&quot;⸮&quot;);
+//clip = Replace(clip,&quot;^&quot;,&quot;ˆ&quot;);
+clip = RegExS(clip,&quot;\r\n&quot;,&quot;&quot;);
+clip = RegExS(clip,&quot;\n&quot;,&quot;&quot;);
+
+//output(Concat(2,clip,&quot;¦&quot;));
+
+cnt_quote = Count(clip, &quot;&quot;&quot;&quot;);
+cqh = Ceil(cnt_quote / 2.0); // round up to make middle “
+for (i = 1; i &lt;= cnt_quote; i++) {
+  clip = Replace(clip,&quot;&quot;&quot;&quot;,(i &lt;= cqh)?&quot;“&quot;:&quot;”&quot;,,1);
+}
+//clip = Replace(clip,&quot;&quot;&quot;&quot;,&quot;”&quot;);
+selstart = selstart + len(clip);
+selend = selstart;
+
+return valleft + clip + valright
+</eval>
+</regexsel>

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+W" name="Case: Capitalize Words">
+	<eval>len(valsel) &gt; 0 ? (valleft + capitalize(valsel, 2) + valright)
+	: capitalize(value, 1)</eval>
+</regexsel>

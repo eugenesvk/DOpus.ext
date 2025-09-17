@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<regexsel key="f2" name="Cycle selection (stem -&gt; ext -&gt; all)_2">
+	<eval>if       (selstart == 0                  &amp;&amp; selend == len(valstem)) {
+	restoreext();
+	if (len(valstem) &lt; len(value)) {
+		  selstart =   len(valstem) + 1;    selend =  len(value  );}
+} elseif (selstart == (len(valstem) + 1) &amp;&amp; selend == len(value  )) {
+	      selstart = 0                 ;    selend =  len(value  );
+} else {  selstart = 0                 ;    selend =  len(valstem);
+}
+</eval>
+</regexsel>

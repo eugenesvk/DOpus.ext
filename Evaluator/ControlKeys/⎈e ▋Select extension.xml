@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+E" name="▋Select extension">
+	<eval>restoreext();
+if (len(valstem) &gt; 0 &amp;&amp; len(valstem) &lt; len(value)) {
+	selstart = len(valstem) + 1;
+	selend = len(value);
+}</eval>
+</regexsel>

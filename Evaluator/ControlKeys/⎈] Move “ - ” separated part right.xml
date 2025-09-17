@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<regexsel key="221,2" name="Move &quot; - &quot; separated part right">
+	<eval>strSeparator  = &quot; - &quot;;
+lenSeparator = Len(strSeparator);
+lenHalfSep = lenSeparator/2;
+
+lenStem = Len(valstem);
+
+leftSepPos = InStr(valstem, strSeparator, selstart, &quot;r&quot;);
+if ((leftSepPos &gt; 0) &amp;&amp; ((leftSepPos + lenHalfSep) &gt;= selstart)) {
+	leftSepPos = InStr(valstem, strSeparator, leftSepPos-1, &quot;r&quot;);
+}
+
+if (leftSepPos &lt; 0) { leftSepPos = 0; }
+
+rightSepPos = InStr(valstem, strSeparator, selend, &quot;r&quot;);
+if ((rightSepPos == -1) || ((rightSepPos + lenHalfSep) &lt; selend)) {
+	rightSepPos = InStr(valstem, strSeparator, selend);
+}
+if ((rightSepPos == -1) || (leftSepPos &gt;= rightSepPos)) { return; }
+
+lastSepPos = InStr(valstem, strSeparator, rightSepPos+1);
+
+if (lastSepPos &lt; 0) { lastSepPos = lenStem; }
+
+strBefore = Mid(valstem, 0, leftSepPos);
+strPartSwap1 = Mid(valstem, leftSepPos, rightSepPos - leftSepPos);
+strPartSwap2 = Mid(valstem, rightSepPos, lastSepPos - rightSepPos);
+strAfter = Mid(valstem, lastSepPos, lenStem - lastSepPos);
+
+selstart = Len(strBefore) + Len(strPartSwap2);
+selend = selstart + Len(strPartSwap1);
+if (Len(strBefore) == 0) {
+	strPartSwap2 = Mid(strPartSwap2, lenSeparator, -1);
+	strPartSwap2 = strPartSwap2 + strSeparator;
+} else {
+	selstart = selstart + lenSeparator;
+}
+
+return strBefore + strPartSwap2 + strPartSwap1 + strAfter + valext;
+</eval>
+</regexsel>

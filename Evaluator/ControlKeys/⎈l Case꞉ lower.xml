@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+L" name="Case: lower">
+	<eval>len(valsel) &gt; 0 ? (valleft + lcase(valsel) + valright) : lcase(value)</eval>
+</regexsel>

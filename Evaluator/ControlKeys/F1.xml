@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<regexsel key="f1" name="Show shortcut cheatsheet tooltip">
+	<eval>ShowTips()</eval>
+</regexsel>

@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<regexsel key="190,2" name="Dots and underscores to spaces">
+	<eval>RegExS(valstem, &quot;(\d)\.(\d)#&quot;, &quot;\1\x0e\2&quot;, &quot;[\._]&quot;, &quot; &quot;, &quot;\x0e&quot;, &quot;.&quot;) + valext</eval>
+</regexsel>

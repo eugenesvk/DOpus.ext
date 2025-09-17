@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+F" name="▋Select filename stem">
+	<eval>selstart = 0; selend = len(valstem);</eval>
+</regexsel>

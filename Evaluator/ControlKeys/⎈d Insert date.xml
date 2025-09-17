@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+D" name="Insert date">
+	<eval>datestr = now() as &quot;d#yyyy-MM-dd&quot;;
+if (selstart == 0 &amp;&amp; selend &gt;= len(valstem)) { // If the whole name stem is selected, add the date to the start and select it
+  datestr = datestr + &quot; &quot;;
+  selstart = 0; selend = len(datestr);
+  return datestr + value;}
+// Otherwise, replace the selection with the date, adding spaces if needed.
+leftchar = right(valleft,1);
+rightchar = left(valright,1);
+if (leftchar != &quot;&quot; &amp;&amp; leftchar != &quot; &quot; &amp;&amp; leftchar != &quot;.&quot; &amp;&amp; leftchar != &quot;_&quot;) {
+  datestr = &quot; &quot; + datestr;}
+if (rightchar != &quot;&quot; &amp;&amp; rightchar != &quot; &quot; &amp;&amp; rightchar != &quot;.&quot; &amp;&amp; rightchar != &quot;_&quot;) {
+  datestr = datestr + &quot; &quot;;}
+selstart = len(valleft); selend = selstart + len(datestr);
+return valleft + datestr + valright;
+</eval>
+</regexsel>

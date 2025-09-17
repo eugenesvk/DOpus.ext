@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<regexsel key="ctrl+U" name="Case: UPPER">
+	<eval>len(valsel) &gt; 0 ? (valleft + ucase(valsel) + valright) : ucase(value)</eval>
+</regexsel>
