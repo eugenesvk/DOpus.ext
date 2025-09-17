@@ -12,16 +12,16 @@ k = 1000; // 1024 Display size as Binary (2¹⁰=1024), otherwise Decimal (10³=
 //     123  byte
 pre=&quot;&quot;; v=&quot;&quot;; l=&quot;&quot;;
 sz = size as double; // for correct rounding of .xy
-      if (size ==    0 )  	{return &quot;   ⸱   &quot;; // align 4.12_ kb with 123 bytes
+      if (size ==    0 )     	{return &quot;   ⸱   &quot;; // align 4.12_ kb with 123 bytes
 } elseif (size &lt;     k )  	{n=sz         ; pre=n&gt;=100?&quot;    &quot;:(n&gt;=10?&quot;     &quot;:&quot;      &quot;); v=size as str;
 } elseif (size &lt; Pow(k,2))	{n=sz/Pow(k,1); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;);
 } elseif (size &lt; Pow(k,3))	{n=sz/Pow(k,2); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=&quot;m&quot;;
 } elseif (size &lt; Pow(k,4))	{n=sz/Pow(k,3); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;b&gt;G&lt;/b&gt;&quot;:&quot;G&quot;);
-} elseif (size &lt; Pow(k,5))	{n=sz/Pow(k,4); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;b&gt;T&lt;/b&gt;&quot;:&quot;T&quot;);
-} elseif (size &lt; Pow(k,6))	{n=sz/Pow(k,5); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;b&gt;P&lt;/b&gt;&quot;:&quot;P&quot;);
-} elseif (size &lt; Pow(k,7))	{n=sz/Pow(k,6); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;b&gt;E&lt;/b&gt;&quot;:&quot;E&quot;);
-} elseif (size &lt; Pow(k,8))	{n=sz/Pow(k,7); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;b&gt;Z&lt;/b&gt;&quot;:&quot;Z&quot;);
-} elseif                  	{n=sz/Pow(k,8); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;b&gt;Y&lt;/b&gt;&quot;:&quot;Y&quot;);
+} elseif (size &lt; Pow(k,5))	{n=sz/Pow(k,4); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;#26a0da&gt;&lt;b&gt;T&lt;/b&gt;&lt;/#&gt;&quot;:&quot;T&quot;); //orangy ff8000 dark blue 000080
+} elseif (size &lt; Pow(k,6))	{n=sz/Pow(k,5); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;#26a0da&gt;&lt;b&gt;P&lt;/b&gt;&lt;/#&gt;&quot;:&quot;P&quot;);
+} elseif (size &lt; Pow(k,7))	{n=sz/Pow(k,6); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;#26a0da&gt;&lt;b&gt;E&lt;/b&gt;&lt;/#&gt;&quot;:&quot;E&quot;);
+} elseif (size &lt; Pow(k,8))	{n=sz/Pow(k,7); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;#26a0da&gt;&lt;b&gt;Z&lt;/b&gt;&lt;/#&gt;&quot;:&quot;Z&quot;);
+} elseif                     	{n=sz/Pow(k,8); pre=n&gt;=100?&quot;&quot;:(n&gt;=10?&quot; &quot;:&quot;  &quot;); v=(n as %.02); v=RegExS(v,&quot;\.00$&quot;,&quot;   &quot;); v=RegExS(v,&quot;0$&quot;,&quot; &quot;); l=(operation==&quot;markup&quot;?&quot;&lt;#26a0da&gt;&lt;b&gt;Y&lt;/b&gt;&lt;/#&gt;&quot;:&quot;Y&quot;);
 }
 return pre + v +&quot; &quot;+ l
 </evalcolumn>
