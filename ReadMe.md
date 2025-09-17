@@ -56,7 +56,6 @@ Copy the required scripts (and the `inc_xx.js` libraries they depend on) to your
 
 ## Known issues
 - [Column.SizeFormat](./Column.SizeFormat.js) not performant in folders with many items due to an unavoidable per-item JScript overhead, but looks nice :)
-- [Column.Size.ε](./Evaluator/Column.Size.Format.xml) is missing a background graph and requires 2 columns instead of 1
 - [backup.TabUndo](./backup.TabUndo.js) has a bunch of issues mentioned in the [ToDos](./ToDos.md) along with missing features
 - [Cmd.JumpItem↕](./Cmd.JumpItem↕.js)
   - ails with v13 Expanded folders (items' indices we get don't account for visual order)
