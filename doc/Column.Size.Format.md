@@ -27,7 +27,6 @@ Some of the benefits for compactness and alignment
   - Could also red-color > **T** for even more prominence?
 
 A few limitations:
-  - no background **size graph** as that feature is not implemented for evaluator columns
   - single-column version (value + label):
     - must be ‹left-aligned (it sidesteps the issue of aligning variable-width labels by left-aligning only the numbers)
   - two-column version (value, label):
@@ -43,4 +42,4 @@ A few limitations:
   - open `Preferences / File Display Columns / Evaluator Columns`
   - click `Pas̲te`
   - add `Size.Full.ε` or `Size.ε` and `Size.Label.ε` columns to your folder format
-    - tip: for two-column version try to position the label column to the left of the size column as then it might be a slightly more visible indicator of size given the background graphs are missing
+    - tip: for two-column version try to position the label column to the left of the size column as then it might be a slightly more visible
