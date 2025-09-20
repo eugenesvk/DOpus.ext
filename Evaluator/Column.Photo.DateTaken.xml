@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<evalcolumn align="1" attrrefresh="yes" autorefresh="yes" category="image" customgrouping="no" foldertype="shell" header="🗓Take" keyword="imgDateTakenε" maxstars="5" namerefresh="no" nocache="yes" reversegroups="no" reversesort="yes" supportmarkup="yes" title="imgDateTaken ε" type="0" width="14">// v0.1@25-09 Use Explorer&apos;s data for unsupported files like HEIC
+  // also shorter format ‘25 S 12 M 15: 4’
+    // leading 0s spaced out
+  // months colored per season
+  // alignment slightly broken, use time as a separate column to improve
+  // &quot;CACHE column value&quot; is bugged, so temporarily disable it
+date = Val(&quot;sh:System.Photo.DateTaken&quot;);
+if (!IsSet(date)) { return }
+if (&quot;&quot; ==  date ) { return }
+if (operation == &quot;sort&quot;) {return date}
+date = Replace(date, Chr(8206), &quot;&quot;);
+date = Replace(date, Chr(8207), &quot;&quot;);
+d = ParseDate(date);
+day_n = DatePart(d,&quot;DD&quot;); //Day of week as a number (1 = Monday)
+dow = (day_n==1)?&quot;M&quot;:
+  (   (day_n==2)?&quot;T     &quot;:
+  (   (day_n==3)?&quot;W&quot;:
+  (   (day_n==4)?&quot;R  &quot;:
+  (   (day_n==5)?&quot;F   &quot;:
+  (   (day_n==6)?&quot;S   &quot;:
+  (   (day_n==7)?&quot;U &quot;:&quot;&quot;)
+  )))));
+// Color weekends
+c_wkend  = ((day_n&gt;=6)?
+  [pre=&quot;&lt;#e40000&gt;&quot;; pos=&quot;&lt;/#&gt;&quot;]:
+  [pre=&quot;&quot;         ; pos=&quot;&quot;    ]);
+
+mon_n = DatePart(d,&quot;M&quot;); //Month, no leading zero
+mon = (mon_n==12)?&quot;D &quot;:     	//December 	Dec	d	De	D	Dc	Dr
+  (   (mon_n== 1)?&quot;j &quot;:     	//January  	Jan	j	Ja	J	Jy	Jn
+  (   (mon_n== 2)?&quot;f    &quot;:  	//February 	Feb	f	Fe	F	Fb	Fy
+  (   (mon_n== 3)?&quot;m&quot;:      	//March    	Mar	M	Ma	M	Mr	Mh
+  (   (mon_n== 4)?&quot;a     &quot;: 	//April    	Apr	A	Ap	A	Ar	Al
+  (   (mon_n== 5)?&quot;y   &quot;:   	//May      	May	Y	Ma	M	My	.
+  (   (mon_n== 6)?&quot;j &quot;:     	//June     	Jun	J	Ju	J	Jn	Je
+  (   (mon_n== 7)?&quot;J &quot;:     	//July     	Jul	L	Ju	J	Jl	Jy
+  (   (mon_n== 8)?&quot;A     &quot;: 	//August   	Aug	G	Au	A	Ag	At
+  (   (mon_n== 9)?&quot;S   &quot;:   	//September	Sep	S	Se	S	Sp	St   SR
+  (   (mon_n==10)?&quot;O   &quot;:   	//October  	Oct	O	Oc	O	Ot	Or
+  (   (mon_n==11)?&quot;N   &quot;:&quot;&quot;)	//November 	Nov	N	No	N	Nv	Nr
+  ))))))))));
+// Color seasons for easier differentiation of 1-letter symbols
+c_month = (
+   (mon_n&gt;=12)? [pre=&quot;&quot;         	; pos=&quot;&quot;    	]: //Winter black
+  ((mon_n&gt;= 9)? [pre=&quot;&lt;#ED7829&gt;&quot;	; pos=&quot;&lt;/#&gt;&quot;	]: //Fall   orange
+  ((mon_n&gt;= 6)? [pre=&quot;&lt;#f5bb36&gt;&quot;	; pos=&quot;&lt;/#&gt;&quot;	]: //Summer wheat-yellowish
+  ((mon_n&gt;= 3)? [pre=&quot;&lt;#368E2B&gt;&quot;	; pos=&quot;&lt;/#&gt;&quot;	]: //Spring greenish
+  ((mon_n&gt;= 1)? [pre=&quot;&quot;         	; pos=&quot;&quot;    	]: //Winter black
+                [pre=&quot;&quot;         	; pos=&quot;&quot;    	]
+  )))));
+
+return operation == &quot;markup&quot; ?
+(&quot;&quot;
+  +         ((x=DatePart(d,&quot;yy&quot;))&gt;9?x:&quot; &quot;+x)  +&quot; &quot;
+  + c_month.pre + mon + c_month.pos           +&quot; &quot;
+  +         ((x=DatePart(d,&quot;dd&quot;))&gt;9?x:&quot; &quot;+x)  +&quot; &quot;
+  + c_wkend.pre + dow + c_wkend.pos           +&quot; &quot;
+  +         ((x=DatePart(d,&quot;HH&quot;))&gt;9?x:&quot; &quot;+x) +&quot;:&quot;
+  +         ((x=DatePart(d,&quot;mm&quot;))&gt;9?x:&quot;_&quot;+x) //+&quot;:&quot;
+  // + ((x=DatePart(d,&quot;ss&quot;))&gt;9?x:&quot; &quot;+x)
+) :
+(&quot;&quot;
+  + ((x=DatePart(d,&quot;yy&quot;))&gt;9?x:&quot; &quot;+x) +&quot; &quot;
+  +     DatePart(d,&quot;MMM&quot;)          +&quot; &quot;
+  + ((x=DatePart(d,&quot;dd&quot;))&gt;9?x:&quot; &quot;+x) +&quot; &quot;
+  +        dow                        +&quot; &quot;
+  + ((x=DatePart(d,&quot;HH&quot;))&gt;9?x:&quot; &quot;+x) +&quot;:&quot;
+  + ((x=DatePart(d,&quot;mm&quot;))&gt;9?x:&quot;_&quot;+x) //+&quot;:&quot;
+  // + ((x=DatePart(d,&quot;ss&quot;))&gt;9?x:&quot; &quot;+x)
+)
+</evalcolumn>
