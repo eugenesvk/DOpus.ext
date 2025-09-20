@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<evalcolumn align="1" attrrefresh="yes" autorefresh="yes" category="image" customgrouping="no" foldertype="shell" header="🕓Take" keyword="imgDateTakenTimeε" maxstars="5" namerefresh="no" nocache="yes" reversegroups="no" reversesort="yes" supportmarkup="yes" title="imgDateTaken Time ε" type="0" width="14">// imgDateTaken Time for better alignment
+date = Val(&quot;sh:System.Photo.DateTaken&quot;);
+if (!IsSet(date)) { return }
+if (&quot;&quot; ==  date ) { return }
+if (operation == &quot;sort&quot;) {return date}
+date = Replace(date, Chr(8206), &quot;&quot;);
+date = Replace(date, Chr(8207), &quot;&quot;);
+d = ParseDate(date);
+return operation == &quot;markup&quot; ?
+(&quot;&quot;
+  +         ((x=DatePart(d,&quot;HH&quot;))&gt;9?x:&quot; &quot;+x) +&quot;:&quot;
+  +         ((x=DatePart(d,&quot;mm&quot;))&gt;9?x:&quot;_&quot;+x) //+&quot;:&quot;
+  // + ((x=DatePart(d,&quot;ss&quot;))&gt;9?x:&quot; &quot;+x)
+) :
+(&quot;&quot;
+  + ((x=DatePart(d,&quot;HH&quot;))&gt;9?x:&quot; &quot;+x) +&quot;:&quot;
+  + ((x=DatePart(d,&quot;mm&quot;))&gt;9?x:&quot;_&quot;+x) //+&quot;:&quot;
+  // + ((x=DatePart(d,&quot;ss&quot;))&gt;9?x:&quot; &quot;+x)
+)
+</evalcolumn>
